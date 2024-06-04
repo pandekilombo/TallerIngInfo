@@ -98,7 +98,7 @@ class MainWindow(MDScreen):
         return True
     
     def Test(self):
-        print("Cargando Inventario")
+        print("Cargando Vehiculos")
         return True
 
 
@@ -132,11 +132,10 @@ class Anadir_Usuario(MDScreen):
 
 class Anadir_Producto(MDScreen):
     def agregar(self):
-        res = db.collection("Inventario").document(self.ids.id_prod.text).set({  # insert document
+        res = db.collection("Vehiculos").document(self.ids.id_prod.text).set({  # insert document
             'Nombre': self.ids.nombre.text,
-            'Tipo_de_Producto': self.ids.tipo_prod.text,
-            'Stock_Unidades': self.ids.num_stock.text,
-            'Estado': self.ids.stock_estado.text,                        
+            'Tipo_de_Vehiculo': self.ids.tipo_prod.text,
+                                   
          
         })
         self.ids.id_prod.text = ""
@@ -148,7 +147,7 @@ class Anadir_Producto(MDScreen):
 
 class Eliminar_Producto(MDScreen):
     def eliminar(self):
-        res = db.collection("Inventario").document(self.ids.id_prod.text).delete()  # delete document
+        res = db.collection("Vehiculos").document(self.ids.id_prod.text).delete()  # delete document
         self.ids.id_prod.text = ""
         print(res)
 
@@ -302,9 +301,9 @@ class MainApp(MDApp):
             self.root.get_screen('login').ids.password.text = ''
         self.root.current = window
         self.root.transition.direction = "down"
-        if window == "invwindow":
+        if window == "vehwindow":
             # Obtener una referencia a la colección en Firestore
-            docs_ref = db.collection("Inventario")
+            docs_ref = db.collection("Vehiculos")
 
             # Recuperar todos los documentos en la colección
             docs = docs_ref.stream()
@@ -313,19 +312,18 @@ class MainApp(MDApp):
                 user_data = doc.to_dict()
                 id_producto = doc.id
                 Nombre = user_data.get("Nombre", "")
-                TipoProducto = user_data.get("Tipo_de_Producto", "")
-                Stock = user_data.get("Stock_Unidades", "")
-                Estado = user_data.get("Estado", "")
+                TipoVehiculo = user_data.get("Tipo_de_Vehiculo", "")
+                
 
 
     
-                data.append((Nombre, id_producto, TipoProducto, Stock, Estado))
+                data.append((Nombre, patente_vehiculo, TipoVehiculo))
 
 
 #doc_Inventario.add({"ID_Producto":1001,"Nombre": "Leche Colun 10L","Tipo de producto": "Leche", "Stock_Unidades":8,"Estado":"Por agotarse" })
 
-            self.root.get_screen('invwindow').ids.container.clear_widgets()
-            self.root.get_screen('invwindow').ids.container.add_widget(MDDataTable(
+            self.root.get_screen('vehwindow').ids.container.clear_widgets()
+            self.root.get_screen('vehwindow').ids.container.add_widget(MDDataTable(
                 pos_hint={'center_x': 0.5, 'center_y': 0.5},
                 size_hint=(1, 1),
                 check=False,

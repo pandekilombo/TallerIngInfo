@@ -5,9 +5,9 @@ ScreenManagement:
     AdminWindow:
     Anadir_Usuario:
     Eliminar_Usuario:
-    Inventario:
-    Anadir_Producto:
-    Eliminar_Producto:
+    Vehiculo:
+    Anadir_Vehiculo:
+    Eliminar_Vehiculo:
 <LoginScreen>:
     name: 'login'
     Image:
@@ -365,7 +365,7 @@ ScreenManagement:
                     size_hint_y: None  # Desactiva el tamaño automático en el eje y
                     height: dp(48)  # Altura deseada del ListItemWithChip
                     on_release:
-                        app.switchWindow('invwindow', root.Test())
+                        app.switchWindow('reswindow', root.Test())
                         root.manager.transition.direction = "up"
 
                     IconLeftWidget:
@@ -494,12 +494,12 @@ ScreenManagement:
             pos_hint: {'right': 1}
 
 
-<Inventario>
-    name: 'invwindow'
-    id: invwindow
+<Vehiculo>
+    name: 'vehwindow'
+    id: vehwindow
     MDScreen:
         MDTopAppBar:
-            title:'Inventario'
+            title:'Vehiculos'
             pos_hint:{'top':1}
             md_bg_color: app.theme_cls.primary_dark
             
@@ -514,12 +514,12 @@ ScreenManagement:
                 height: self.minimum_height  # Establece la altura de la lista para que se ajuste automáticamente al contenido
                 pos_hint: {'center_y': 0.6}  # Centra verticalmente la lista de iconos en el layout
                 ListItemWithChip:
-                    text: 'Crear o Modificar producto'
+                    text: 'Crear o Modificar Vehiculo'
                     size_hint_y: None  # Desactiva el tamaño automático en el eje y
                     height: dp(48)  # Altura deseada del ListItemWithChip
                     on_release:
-                        app.switchWindow('agregar_prod', True)
-                        app.root.current = 'agregar_prod'
+                        app.switchWindow('agregar_veh', True)
+                        app.root.current = 'agregar_veh'
                         root.manager.transition.direction = "up"
                     IconLeftWidget:
                         icon: 'account-plus'
@@ -527,12 +527,12 @@ ScreenManagement:
                         text_color: 1, 1, 1, 1
                         font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
                 ListItemWithChip:
-                    text: 'Eliminar Producto'
+                    text: 'Eliminar Vehiculo'
                     size_hint_y: None  # Desactiva el tamaño automático en el eje y
                     height: dp(48)  # Altura deseada del ListItemWithChip
                     on_release:
-                        app.switchWindow('eliminar_prod', True)
-                        app.root.current = 'eliminar_prod'
+                        app.switchWindow('eliminar_veh', True)
+                        app.root.current = 'eliminar_veh'
                         root.manager.transition.direction = "up"
                     IconLeftWidget:
                         icon: 'account-remove'
@@ -765,12 +765,12 @@ ScreenManagement:
 
 
 
-<Anadir_Producto>
-    name: 'agregar_prod'
-    id: agregar_prod
+<Anadir_Vehiculo>
+    name: 'agregar_veh'
+    id: agregar_veh
     MDScreen:
         MDTopAppBar:
-            title:'Añadir Producto'
+            title:'Añadir Vehiculo'
             pos_hint:{'top':1}
             md_bg_color: app.theme_cls.primary_dark
             
@@ -789,8 +789,8 @@ ScreenManagement:
                     size_hint_y: None  # Desactiva el tamaño automático en el eje y
                     height: dp(48)  # Altura deseada del ListItemWithChip
                     on_release:
-                        app.switchWindow('invwindow', True)
-                        app.root.current = 'invwindow'
+                        app.switchWindow('vehwindow', True)
+                        app.root.current = 'vehwindow'
                         root.manager.transition.direction = "up"
                     IconLeftWidget:
                         icon: 'logout'
@@ -807,7 +807,7 @@ ScreenManagement:
            
             MDTextField:
                 id: id_prod
-                hint_text: "ID"
+                hint_text: "Patente"
                 icon_right: "cuenta"
                 size_hint_x: 0.5
                 size_hint_y: None               
@@ -829,7 +829,7 @@ ScreenManagement:
 
             MDTextField:
                 id: tipo_prod
-                hint_text: "Tipo de Producto"
+                hint_text: "Tipo de Vehiculo"
                 icon_right: "apellidos"
                 size_hint_x: 0.5
                 width: 200
@@ -837,28 +837,7 @@ ScreenManagement:
                 size_hint_y: None
                 height: 200                          
                 pos_hint: {"center_x": 0.5}
-            MDTextField:
-                id: num_stock
-                hint_text: "N° Stock"
-                icon_right: "security"
-                size_hint_x: 0.5
-                size_hint_y: None
-                height: 200                          
-                width: 200
-                font_size: 18
-                pos_hint: {"center_x": 0.5}
-               
-            MDTextField:
-                id: stock_estado
-                hint_text: "Estado de Stock"
-                icon_right: "apellidos"
-                size_hint_x: 0.5
-                width: 200
-                font_size: 18
-                size_hint_y: None
-                height: 200                          
-                pos_hint: {"center_x": 0.5}
-
+            
 
             MDRoundFlatButton:
                 text: "Agregar - Editar"
@@ -880,12 +859,12 @@ ScreenManagement:
 
 
 
-<Eliminar_Producto>
-    name: 'eliminar_prod'
-    id: eliminar_prod
+<Eliminar_Vehiculo>
+    name: 'eliminar_veh'
+    id: eliminar_veh
     MDScreen:
         MDTopAppBar:
-            title:'Eliminar Producto'
+            title:'Eliminar Vehiculo'
             pos_hint:{'top':1}
             md_bg_color: app.theme_cls.primary_dark
             
@@ -904,8 +883,8 @@ ScreenManagement:
                     size_hint_y: None  # Desactiva el tamaño automático en el eje y
                     height: dp(48)  # Altura deseada del ListItemWithChip
                     on_release:
-                        app.switchWindow('invwindow', True)
-                        app.root.current = 'invwindow'
+                        app.switchWindow('vehwindow', True)
+                        app.root.current = 'vehwindow'
                         root.manager.transition.direction = "up"
                     IconLeftWidget:
                         icon: 'logout'
@@ -922,7 +901,7 @@ ScreenManagement:
            
             MDTextField:
                 id: id_prod
-                hint_text: "ID de Producto"
+                hint_text: "Patente de Vehiculo"
                 icon_right: "cuenta"
                 size_hint_x: 0.5
                 size_hint_y: None               
