@@ -130,7 +130,7 @@ class Anadir_Usuario(MDScreen):
 
 
 
-class Anadir_Producto(MDScreen):
+class Anadir_Vehiculo(MDScreen):
     def agregar(self):
         res = db.collection("Vehiculos").document(self.ids.id_prod.text).set({  # insert document
             'Nombre': self.ids.nombre.text,
@@ -145,7 +145,7 @@ class Anadir_Producto(MDScreen):
         self.ids.stock_estado.text = ""                
         print(res)
 
-class Eliminar_Producto(MDScreen):
+class Eliminar_Vehiculo(MDScreen):
     def eliminar(self):
         res = db.collection("Vehiculos").document(self.ids.id_prod.text).delete()  # delete document
         self.ids.id_prod.text = ""
@@ -164,7 +164,7 @@ class AdminWindow(MDScreen):
     def eliminar_filas_seleccionadas(self):
         print("test")
 
-class Inventario(MDScreen):
+class Vehiculos(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)    
     def build(self):
