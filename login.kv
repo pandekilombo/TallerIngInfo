@@ -8,6 +8,117 @@ ScreenManagement:
     Vehiculos:
     Anadir_Vehiculo:
     Eliminar_Vehiculo:
+
+
+## barra latelar para desplegar menu 
+<NavDrawer>:
+    BoxLayout:
+        orientation: 'vertical'
+
+        MDLabel:
+            text: 'GestiNet'
+            bold: True
+            font_style: "H5"
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: False
+            
+            MDList:
+                ListItemWithChip:
+                    text: 'Inicio'
+                    
+                    on_release:
+                        app.root.current = 'mainwindow'
+                        root.manager.transition.direction = "left"
+                        root.nav_drawer.set_state("close")
+                        
+                    IconLeftWidget:
+                        icon: 'home'
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+
+                        on_release:
+                            app.root.current = 'mainwindow'
+                            root.manager.transition.direction = "left"
+                            root.nav_drawer.set_state("close")
+                
+                ListItemWithChip:
+                    text: 'Inventario'
+
+                    on_release:
+                        app.root.current = 'inventory'
+                        root.manager.transition.direction = "left"
+                        root.nav_drawer.set_state("close")
+
+                    IconLeftWidget:
+                        icon: 'checkbox-marked-circle-outline'
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+
+                        on_release:
+                            app.root.current = 'inventory'
+                            root.manager.transition.direction = "left"
+                            root.nav_drawer.set_state("close")
+
+                ListItemWithChip:
+                    text: 'Usuarios'
+
+                    on_release:
+                        app.root.current = 'userpanel'
+                        root.manager.transition.direction = "left"
+                        root.nav_drawer.set_state("close")
+
+                    IconLeftWidget:
+                        icon: 'account-group'
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+
+                        on_release:
+                            app.root.current = 'userpanel'
+                            root.manager.transition.direction = "left"
+                            root.nav_drawer.set_state("close")
+
+                ListItemWithChip:
+                    text: 'Proveedores'
+
+                    on_release:
+                        app.root.current = 'supplier'
+                        root.manager.transition.direction = "left"
+                        root.nav_drawer.set_state("close")
+
+                    IconLeftWidget:
+                        icon: 'truck-delivery'
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+
+                        on_release:
+                            app.root.current = 'supplier'
+                            root.manager.transition.direction = "left"
+                            root.nav_drawer.set_state("close")
+
+                ListItemWithChip:
+                    text: 'Cerrar Sesión'
+
+                    on_release:
+                        app.switchWindow('login', True)
+                        app.root.current = 'login'
+                        root.manager.transition.direction = "up"
+                        root.nav_drawer.set_state("close")
+
+                    IconLeftWidget:
+                        icon: 'logout'
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+
+                        on_release:
+                            app.root.current = 'login'
+                            root.manager.transition.direction = "up"
+                            root.nav_drawer.set_state("close")
+
+
 <LoginScreen>:
     name: 'login'
     Image:
