@@ -6,119 +6,10 @@ ScreenManagement:
     AdminWindow:
     Anadir_Usuario:
     Eliminar_Usuario:
-
     Vehiculos:
     Anadir_Vehiculo:
     Eliminar_Vehiculo:
-
-
-## barra latelar para desplegar menu 
-<NavDrawer>:
-    BoxLayout:
-        orientation: 'vertical'
-
-        MDLabel:
-            text: 'GestiNet'
-            bold: True
-            font_style: "H5"
-            size_hint_y: None
-            height: self.texture_size[1]
-
-        ScrollView:
-            do_scroll_x: False
-            do_scroll_y: False
-            
-            MDList:
-                ListItemWithChip:
-                    text: 'Inicio'
-                    
-                    on_release:
-                        app.root.current = 'mainwindow'
-                        root.manager.transition.direction = "left"
-                        root.nav_drawer.set_state("close")
-                        
-                    IconLeftWidget:
-                        icon: 'home'
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
-
-                        on_release:
-                            app.root.current = 'mainwindow'
-                            root.manager.transition.direction = "left"
-                            root.nav_drawer.set_state("close")
-                
-                ListItemWithChip:
-                    text: 'Inventario'
-
-                    on_release:
-                        app.root.current = 'inventory'
-                        root.manager.transition.direction = "left"
-                        root.nav_drawer.set_state("close")
-
-                    IconLeftWidget:
-                        icon: 'checkbox-marked-circle-outline'
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
-
-                        on_release:
-                            app.root.current = 'inventory'
-                            root.manager.transition.direction = "left"
-                            root.nav_drawer.set_state("close")
-
-                ListItemWithChip:
-                    text: 'Usuarios'
-
-                    on_release:
-                        app.root.current = 'userpanel'
-                        root.manager.transition.direction = "left"
-                        root.nav_drawer.set_state("close")
-
-                    IconLeftWidget:
-                        icon: 'account-group'
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
-
-                        on_release:
-                            app.root.current = 'userpanel'
-                            root.manager.transition.direction = "left"
-                            root.nav_drawer.set_state("close")
-
-                ListItemWithChip:
-                    text: 'Proveedores'
-
-                    on_release:
-                        app.root.current = 'supplier'
-                        root.manager.transition.direction = "left"
-                        root.nav_drawer.set_state("close")
-
-                    IconLeftWidget:
-                        icon: 'truck-delivery'
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
-
-                        on_release:
-                            app.root.current = 'supplier'
-                            root.manager.transition.direction = "left"
-                            root.nav_drawer.set_state("close")
-
-                ListItemWithChip:
-                    text: 'Cerrar Sesión'
-
-                    on_release:
-                        app.switchWindow('login', True)
-                        app.root.current = 'login'
-                        root.manager.transition.direction = "up"
-                        root.nav_drawer.set_state("close")
-
-                    IconLeftWidget:
-                        icon: 'logout'
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
-
-                        on_release:
-                            app.root.current = 'login'
-                            root.manager.transition.direction = "up"
-                            root.nav_drawer.set_state("close")
+    Reservar_Espacio:
 
 
 <LoginScreen>:
@@ -456,7 +347,7 @@ ScreenManagement:
     MDScreen:
     #Barra de arriba
         MDTopAppBar:
-            title:'GestiNet'
+            title:'Estacionamiento ULAGOS'
             pos_hint:{'top':1}
             md_bg_color: app.theme_cls.primary_dark
         
@@ -480,7 +371,7 @@ ScreenManagement:
                     height: dp(48)  # Altura deseada del ListItemWithChip
   
                     on_release:
-                        app.switchWindow('reswindow', root.Test())
+                        app.switchWindow('reservar_esp', root.Test())
                         root.manager.transition.direction = "up"
 
                     IconLeftWidget:
@@ -617,38 +508,76 @@ ScreenManagement:
     id: vehwindow
 
     MDScreen:
-        BoxLayout:
-            orientation: 'vertical'
-            MDTopAppBar:
-                title:'Vehículos'
-                pos_hint:{'top':1}
-                left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
-                height: "48dp"
-                elevation: 10
-
-            ScrollView:
-                do_scroll_x: True
-                do_scroll_y: False
-
-                MDBoxLayout:
-                    id: containerSupplier
-                    orientation: 'vertical'
-                    size_hint: 1, 1
-
-            MDBottomAppBar:
-                title: 'Acciones'
-                pos_hint: {'bottom': 1}
-                right_action_items: [["plus", lambda x: inv_drawer.set_state("open")]]
-                height: "48dp"
-                elevation: 10
-
-
+        
         MDBoxLayout:
             id: container
             pos: -.2, -64.5    
             orientation: 'vertical'
             size_hint: 1.14, 1
             pos_hint: {'right': 1.05}
+
+        MDNavigationLayout:
+
+            MDScreenManager:
+
+                MDScreen:
+
+                    MDTopAppBar:
+                        title: "Mis Vehículos"
+                        elevation: 4
+                        pos_hint: {"top": 1}
+                        md_bg_color: app.theme_cls.primary_color
+                        text_color: 1, 1, 1, 1
+                       # specific_text_color: "#4a4939"
+                        left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+
+            MDNavigationDrawer:
+                id: nav_drawer
+                radius: (0, 16, 16, 0)
+                pos: -.5,1
+                size_hint: 1, 1
+               # pos_hint: {'left': 1.2}
+                MDNavigationDrawerMenu:
+
+                    MDNavigationDrawerHeader:
+                        title: "Menu"
+                        title_color: app.theme_cls.primary_color
+
+                       # text: "Header text"
+                        spacing: "4dp"
+                        padding: "12dp", 0, 0, "30dp"
+
+                    MDNavigationDrawerLabel:
+                        text: "Mail"
+
+                    DrawerClickableItem:
+                        icon: "gmail"
+                       # right_text: "+99"
+                        text_right_color: "#4a4939"
+                        text: "Inbox"
+
+                    DrawerClickableItem:
+                        icon: "send"
+                        text: "Outbox"
+
+                    MDNavigationDrawerDivider:
+
+                    MDNavigationDrawerLabel:
+                        text: "Salir"
+
+                  #  DrawerLabelItem:
+                   #     icon: "information-outline"
+                   #     text: "Label"
+
+                    DrawerClickableItem:
+                        icon: "logout"
+                       # right_text: "+99"
+                        text_right_color: "#4a4939"
+                        text: "Cerrar Sesión"
+                        on_release:
+                            app.switchWindow('login', True)
+                            app.root.current = 'login'
+                            root.manager.transition.direction = "up"       
 
 
 
@@ -1019,5 +948,98 @@ ScreenManagement:
 
 
                     
+<Reservar_Espacio>
+    name: 'reservar_esp'
+    id: reservar_esp
+    MDScreen:
+        MDTopAppBar:
+            title:'Reservar Espacio'
+            pos_hint:{'top':1}
+            md_bg_color: app.theme_cls.primary_dark
+            
+        MDFloatLayout:
+            pos: 0, -64.5
+            size_hint: .3, 1
+            md_bg_color: app.theme_cls.primary_color
+            height: root.height            
+            MDList:
+                md_bg_color: app.theme_cls.primary_dark     
+                size_hint_y: None  # Desactiva el tamaño automático en el eje y
+                height: self.minimum_height  # Establece la altura de la lista para que se ajuste automáticamente al contenido
+                pos_hint: {'center_y': 0.6}  # Centra verticalmente la lista de iconos en el layout
+                ListItemWithChip:
+                    text: 'Volver'
+                    size_hint_y: None  # Desactiva el tamaño automático en el eje y
+                    height: dp(48)  # Altura deseada del ListItemWithChip
+                    on_release:
+                        app.switchWindow('vehwindow', True)
+                        app.root.current = 'vehwindow'
+                        root.manager.transition.direction = "up"
+                    IconLeftWidget:
+                        icon: 'logout'
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
+        MDBoxLayout:
+            id: agregar_prod_box
+            pos: 0, -64.5    
+            orientation: 'vertical'
+            size_hint: 0.7, 0.9
+            pos_hint: {'right': 1}
+         #   md_bg_color: app.theme_cls.primary_dark
+           
+            MDTextField:
+                id: id_prod
+                hint_text: "Auto"
+                icon_right: "cuenta"
+                size_hint_x: 0.5
+                size_hint_y: None               
+                width: 200
+                height: 200
+                font_size: 18
+                pos_hint: {"center_x": 0.5}
+
+            MDTextField:
+                id: nombre
+                hint_text: "Espacio"
+                icon_right: "nombre"
+                size_hint_x: 0.5
+                size_hint_y: None                
+                width: 200
+                height: 200
+                font_size: 18
+                pos_hint: {"center_x": 0.5}
+
+            MDTextField:
+                id: tipo_prod
+                hint_text: "Lugar"
+                icon_right: "apellidos"
+                size_hint_x: 0.5
+                width: 200
+                font_size: 18
+                size_hint_y: None
+                height: 200                          
+                pos_hint: {"center_x": 0.5}
+
+
+
+#Test
+
+<DrawerClickableItem@MDNavigationDrawerItem>
+    focus_color: "#e7e4c0"
+    text_color: "#4a4939"
+    icon_color: "#4a4939"
+    ripple_color: "#c5bdd2"
+    selected_color: "#0c6c4d"
+
+
+<DrawerLabelItem@MDNavigationDrawerItem>
+    text_color: "#4a4939"
+    icon_color: "#4a4939"
+    focus_behavior: False
+    selected_color: "#4a4939"
+    _no_ripple_effect: True
+            
+
 
                         
