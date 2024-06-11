@@ -21,7 +21,7 @@ from kivy.metrics import dp
 from kivy.core.window import Window
 from kivymd.uix.button import MDIconButton
 
-
+from kivy.properties import StringProperty, ObjectProperty
 # Initialize Firebase Admin SDK
 cred = credentials.Certificate('serviceAccountKey.json')
 app = firebase_admin.initialize_app(cred)
@@ -273,7 +273,10 @@ class RecoverPasswordScreen(MDScreen):
 
 class ScreenManagement(ScreenManager):
     pass
-
+class NavDrawer(BoxLayout):
+    # Panel de navegación
+    manager = ObjectProperty()
+    nav_drawer = ObjectProperty()
 
 
 
@@ -300,47 +303,6 @@ class MainApp(MDApp):
             self.root.get_screen('login').ids.password.text = ''
         self.root.current = window
         self.root.transition.direction = "down"
-        if window == "vehwindow":
-            # Obtener una referencia a la colección en Firestore
-            docs_ref = db.collection("Vehiculos")
-
-            # Recuperar todos los documentos en la colección
-            docs = docs_ref.stream()
-            data = []
-            for doc in docs:
-                user_data = doc.to_dict()
-                id_producto = doc.id
-                Nombre = user_data.get("Nombre", "")
-                TipoVehiculo = user_data.get("Tipo_de_Vehiculo", "")
-                
-
-
-    
-                data.append((Nombre, patente_vehiculo, TipoVehiculo))
-
-
-#doc_Inventario.add({"ID_Producto":1001,"Nombre": "Leche Colun 10L","Tipo de producto": "Leche", "Stock_Unidades":8,"Estado":"Por agotarse" })
-
-            self.root.get_screen('vehwindow').ids.container.clear_widgets()
-            self.root.get_screen('vehwindow').ids.container.add_widget(MDDataTable(
-                pos_hint={'center_x': 0.5, 'center_y': 0.5},
-                size_hint=(1, 1),
-                check=False,
-                use_pagination=True,
-                rows_num=len(data),
-                column_data=[
-                    ("Nombre", dp(40)),
-                    ("ID", dp(20)),                    
-                    ("Tipo", dp(20)),
-                    ("Stock", dp(20)),
-                    ("Estado", dp(20)),
-                 
-                ],  # Definir las columnas
-                row_data=data  # Pasar los datos recuperados directamente
-                
-            ))
-
-
 
 
 
@@ -388,6 +350,49 @@ class MainApp(MDApp):
                 row_data=data  # Pasar los datos recuperados directamente
                 
             ))
+
+        if window == "vehwindow":
+            # Obtener una referencia a la colección en Firestore
+            docs_ref = db.collection('Usuarios').document('Miguel_Contreras1').collection('Vehiculos')
+
+            # Recuperar todos los documentos en la colección
+            docs = docs_ref.stream()
+
+            # Crear una lista para almacenar los datos
+            data = []
+
+            # Iterar sobre los documentos y extraer los datos
+            for doc in docs:
+                user_data = doc.to_dict()
+                nombre_documento = doc.id
+                Marca = user_data.get("Marca","")
+                Modelo= user_data.get("Modelo","")
+                Anio= user_data.get("Año","")
+                Patente= user_data.get("Patente","")
+    
+                data.append((nombre_documento, Marca, Modelo, Anio, Patente))
+                
+            print("Datos: \n")
+            print(data)
+            self.root.get_screen('vehwindow').ids.container.clear_widgets()
+            self.root.get_screen('vehwindow').ids.container.add_widget(MDDataTable(
+                pos_hint={'center_x': 0.5, 'center_y': 0.7},
+                size_hint=(1, 1),
+                check=False,
+                use_pagination=True,
+                rows_num=len(data),
+                column_data=[
+                    ("ID", dp(10)),                
+                    ("Marca", dp(20)),
+                    ("Modelo", dp(20)),
+                    ("Año", dp(20)),
+                    ("Patente", dp(15))
+                 
+                ],  # Definir las columnas
+                row_data=data  # Pasar los datos recuperados directamente
+                
+            ))                
+            
 
 
 

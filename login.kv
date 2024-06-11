@@ -1,4 +1,5 @@
 ScreenManagement:
+
     LoginScreen:
     RecoverPasswordScreen:
     MainWindow:
@@ -516,7 +517,7 @@ ScreenManagement:
                     size_hint_y: None  # Desactiva el tamaño automático en el eje y
                     height: dp(48)  # Altura deseada del ListItemWithChip
                     on_release:
-                        app.switchWindow('adminwindow', root.checkAdmin())
+                        app.switchWindow('vehwindow', True)
                         root.manager.transition.direction = "up"
                     IconLeftWidget:
                         icon: 'car'
@@ -614,69 +615,40 @@ ScreenManagement:
 <Vehiculos>
     name: 'vehwindow'
     id: vehwindow
+
     MDScreen:
-        MDTopAppBar:
-            title:'Vehiculos'
-            pos_hint:{'top':1}
-            md_bg_color: app.theme_cls.primary_dark
-            
-        MDFloatLayout:
-            pos: 0, -64.5
-            size_hint: .3, 1
-            md_bg_color: app.theme_cls.primary_color
-            height: root.height            
-            MDList:
-                md_bg_color: app.theme_cls.primary_dark     
-                size_hint_y: None  # Desactiva el tamaño automático en el eje y
-                height: self.minimum_height  # Establece la altura de la lista para que se ajuste automáticamente al contenido
-                pos_hint: {'center_y': 0.6}  # Centra verticalmente la lista de iconos en el layout
-                ListItemWithChip:
-                    text: 'Crear o Modificar Vehiculo'
-                    size_hint_y: None  # Desactiva el tamaño automático en el eje y
-                    height: dp(48)  # Altura deseada del ListItemWithChip
-                    on_release:
-                        app.switchWindow('agregar_veh', True)
-                        app.root.current = 'agregar_veh'
-                        root.manager.transition.direction = "up"
-                    IconLeftWidget:
-                        icon: 'account-plus'
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
-                        font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
-                ListItemWithChip:
-                    text: 'Eliminar Vehiculo'
-                    size_hint_y: None  # Desactiva el tamaño automático en el eje y
-                    height: dp(48)  # Altura deseada del ListItemWithChip
-                    on_release:
-                        app.switchWindow('eliminar_veh', True)
-                        app.root.current = 'eliminar_veh'
-                        root.manager.transition.direction = "up"
-                    IconLeftWidget:
-                        icon: 'account-remove'
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
-                        font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
-           
-                ListItemWithChip:
-                    text: 'Volver'
-                    size_hint_y: None  # Desactiva el tamaño automático en el eje y
-                    height: dp(48)  # Altura deseada del ListItemWithChip
-                    on_release:
-                        app.switchWindow('mainwindow', True)
-                        app.root.current = 'mainwindow'
-                        root.manager.transition.direction = "up"
-                    IconLeftWidget:
-                        icon: 'logout'
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
-                        font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
+        BoxLayout:
+            orientation: 'vertical'
+            MDTopAppBar:
+                title:'Vehículos'
+                pos_hint:{'top':1}
+                left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+                height: "48dp"
+                elevation: 10
+
+            ScrollView:
+                do_scroll_x: True
+                do_scroll_y: False
+
+                MDBoxLayout:
+                    id: containerSupplier
+                    orientation: 'vertical'
+                    size_hint: 1, 1
+
+            MDBottomAppBar:
+                title: 'Acciones'
+                pos_hint: {'bottom': 1}
+                right_action_items: [["plus", lambda x: inv_drawer.set_state("open")]]
+                height: "48dp"
+                elevation: 10
+
+
         MDBoxLayout:
             id: container
-            pos: 0, -64.5    
+            pos: -.2, -64.5    
             orientation: 'vertical'
-            size_hint: 0.7, 1
-            pos_hint: {'right': 1}
-
+            size_hint: 1.14, 1
+            pos_hint: {'right': 1.05}
 
 
 
