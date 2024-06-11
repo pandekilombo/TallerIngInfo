@@ -5,6 +5,7 @@ ScreenManagement:
     AdminWindow:
     Anadir_Usuario:
     Eliminar_Usuario:
+
     Vehiculos:
     Anadir_Vehiculo:
     Eliminar_Vehiculo:
@@ -463,18 +464,20 @@ ScreenManagement:
        #    pos: 0, -20.5
             size_hint: 1.2, .88
             md_bg_color: app.theme_cls.primary_color
-            height: root.height            
+            height: root.height    
+            orientation: 'vertical'        
             MDList:
-                md_bg_color: app.theme_cls.primary_dark     
+                    
                 size_hint_y: None  # Desactiva el tamaño automático en el eje y
                 height: self.minimum_height  # Establece la altura de la lista para que se ajuste automáticamente al contenido
-                pos_hint: {'center_y': 0.6}  # Centra verticalmente la lista de iconos en el layout
-               
+                pos_hint: {'center_y': 0.5}  # Centra verticalmente la lista de iconos en el layout
+                md_bg_color: app.theme_cls.primary_color            
 
                 ListItemWithChip:
                     text: 'Reservar Espacio'
                     size_hint_y: None  # Desactiva el tamaño automático en el eje y
                     height: dp(48)  # Altura deseada del ListItemWithChip
+  
                     on_release:
                         app.switchWindow('reswindow', root.Test())
                         root.manager.transition.direction = "up"
@@ -503,7 +506,7 @@ ScreenManagement:
                         app.switchWindow('adminwindow', root.checkAdmin())
                         root.manager.transition.direction = "up"
                     IconLeftWidget:
-                        icon: 'shield-account'
+                        icon: 'badge-account-horizontal'
                         theme_text_color: "Custom"
                         text_color: 1, 1, 1, 1
                         font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
@@ -516,12 +519,15 @@ ScreenManagement:
                         app.switchWindow('adminwindow', root.checkAdmin())
                         root.manager.transition.direction = "up"
                     IconLeftWidget:
-                        icon: 'shield-account'
+                        icon: 'car'
                         theme_text_color: "Custom"
                         text_color: 1, 1, 1, 1
                         font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
-    
-
+            
+                OneLineListItem:
+                    height: dp(110)  # Altura del espacio
+                    disabled: True  # Deshabilita la interacción
+                    md_bg_color: app.theme_cls.primary_dark
                 ListItemWithChip:
                     text: 'Cerrar Sesión'
                     size_hint_y: None  # Desactiva el tamaño automático en el eje y

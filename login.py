@@ -211,7 +211,6 @@ class LoginScreen(MDScreen):
                 
                 #PROBLEMA
                 if self.checkUser(user, password) == True:
-                    self.validPopup()
                     return True
                 else:
                     self.invalidPopup()
@@ -284,7 +283,7 @@ class MainApp(MDApp):
 
     #Base de la app
     def build(self):
-        Window.size = (250, 500)
+        Window.size = (260, 500)
         #Configuracion visual inicial
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "BlueGray"
