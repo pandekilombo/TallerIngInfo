@@ -310,10 +310,16 @@ class ContadorAutosInscritos():
 
     def AutoAñadido(self):
         self.Autos=self.Autos+1
+
     def Reiniciar(self):
         self.Autos=0
+
     def MostrarCantidad(self):
         print(self.Autos)
+
+    def DameNumero(self):
+        return self.Autos
+    
 ContadorDeAutos=ContadorAutosInscritos()
 
 
