@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, url_for
 
 app = Flask(__name__)
 
@@ -6,6 +6,11 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return render_template('index.html')
+
+# Ruta para la página de inicio de sesión
+@app.route('/login')
+def login():
+    return render_template('login.html')
 
 # Rutas para las páginas de cada botón
 @app.route('/reservar-estacionamiento')
