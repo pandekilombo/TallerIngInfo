@@ -564,7 +564,9 @@ ScreenManagement:
                     DrawerClickableItem:
                         icon: "minus-thick"
                         text: "Quitar Auto"
-                    
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            root.Quitar_Auto()                        
                     MDNavigationDrawerDivider:
 
                     DrawerClickableItem:
@@ -623,6 +625,15 @@ ScreenManagement:
         hint_text: "Patente"
         
 
+<Content2>
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "90dp"
+
+    MDTextField:
+        id: Auto_Borrar
+        hint_text: "ID del Auto"
 
 
 

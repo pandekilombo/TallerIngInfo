@@ -108,7 +108,15 @@ class Eliminar_Usuario(MDScreen):
         self.ids.usuario.text = ""
         print(res)
 
-
+class BackUp():
+    def __init__(self):
+        self.UserID=""
+    def SaveUserID(self,User):
+        self.UserID=User
+    def GiveUserID(self):
+        return self.UserID
+    
+NewBackup=BackUp()
 
 
 class Anadir_Usuario(MDScreen):
@@ -170,6 +178,7 @@ class AdminWindow(MDScreen):
 
 class Vehiculos(MDScreen):
     dialog = None
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)    
     def build(self):
@@ -218,6 +227,40 @@ class Vehiculos(MDScreen):
                 ],
             )
         self.dialog.open()
+    def Quitar_Auto(self):
+        if not self.dialog:
+            self.dialog = MDDialog(
+                title="Address:",
+                type="custom",
+                content_cls=Content2(),
+                buttons=[
+                    MDFlatButton(
+                        text="CANCEL",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        
+                    ),
+                    MDFlatButton(
+                        text="OK",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.quitar_auto_from_content,
+                    ),
+                ],
+            )
+        self.dialog.open()       
+
+
+    def Quitar_Auto2(self,Auto):
+        res = db.collection("Usuarios").document(NewBackup.GiveUserID()).collection("Vehiculos").document(Auto).delete()  # delete document
+        self.dialog.content_cls.ids.Auto_Borrar.text=""
+        print(res)        
+
+    def quitar_auto_from_content(self, *args):
+
+        Auto = self.dialog.content_cls.ids.Auto_Borrar.text
+        self.Quitar_Auto2(Auto)
+
 
     def insertar_auto_from_content(self, *args):
         marca = self.dialog.content_cls.ids.marca.text
@@ -229,17 +272,11 @@ class Vehiculos(MDScreen):
 class Content(BoxLayout):
     pass
 
+class Content2(BoxLayout):
+    pass
 
 
-class BackUp():
-    def __init__(self):
-        self.UserID=""
-    def SaveUserID(self,User):
-        self.UserID=User
-    def GiveUserID(self):
-        return self.UserID
-    
-NewBackup=BackUp()
+
 
 class LoginScreen(MDScreen):
     # Pantalla de inicio de sesión
