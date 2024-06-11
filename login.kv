@@ -617,38 +617,77 @@ ScreenManagement:
     id: vehwindow
 
     MDScreen:
-        BoxLayout:
-            orientation: 'vertical'
-            MDTopAppBar:
-                title:'Vehículos'
-                pos_hint:{'top':1}
-                left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
-                height: "48dp"
-                elevation: 10
-
-            ScrollView:
-                do_scroll_x: True
-                do_scroll_y: False
-
-                MDBoxLayout:
-                    id: containerSupplier
-                    orientation: 'vertical'
-                    size_hint: 1, 1
-
-            MDBottomAppBar:
-                title: 'Acciones'
-                pos_hint: {'bottom': 1}
-                right_action_items: [["plus", lambda x: inv_drawer.set_state("open")]]
-                height: "48dp"
-                elevation: 10
-
-
         MDBoxLayout:
             id: container
             pos: -.2, -64.5    
             orientation: 'vertical'
             size_hint: 1.14, 1
             pos_hint: {'right': 1.05}
+
+
+        MDNavigationLayout:
+
+            MDScreenManager:
+
+                MDScreen:
+
+                    MDTopAppBar:
+                        title: "Mis Vehículos"
+                        elevation: 4
+                        pos_hint: {"top": 1}
+                        md_bg_color: app.theme_cls.primary_color
+                        text_color: 1, 1, 1, 1
+                       # specific_text_color: "#4a4939"
+                        left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+
+            MDNavigationDrawer:
+                id: nav_drawer
+                radius: (0, 16, 16, 0)
+                pos: -.5,1
+                size_hint: 1, 1
+               # pos_hint: {'left': 1.2}
+                MDNavigationDrawerMenu:
+
+                    MDNavigationDrawerHeader:
+                        title: "Menu"
+                        title_color: app.theme_cls.primary_color
+                        
+                       # text: "Header text"
+                        spacing: "4dp"
+                        padding: "12dp", 0, 0, "30dp"
+
+                    MDNavigationDrawerLabel:
+                        text: "Mail"
+
+                    DrawerClickableItem:
+                        icon: "gmail"
+                       # right_text: "+99"
+                        text_right_color: "#4a4939"
+                        text: "Inbox"
+
+                    DrawerClickableItem:
+                        icon: "send"
+                        text: "Outbox"
+
+                    MDNavigationDrawerDivider:
+
+                    MDNavigationDrawerLabel:
+                        text: "Salir"
+
+                  #  DrawerLabelItem:
+                   #     icon: "information-outline"
+                   #     text: "Label"
+
+                    DrawerClickableItem:
+                        icon: "logout"
+                       # right_text: "+99"
+                        text_right_color: "#4a4939"
+                        text: "Cerrar Sesión"
+                        on_release:
+                            app.switchWindow('login', True)
+                            app.root.current = 'login'
+                            root.manager.transition.direction = "up"                        
+
 
 
 
@@ -1021,3 +1060,21 @@ ScreenManagement:
                     
 
                         
+
+
+#Test
+
+<DrawerClickableItem@MDNavigationDrawerItem>
+    focus_color: "#e7e4c0"
+    text_color: "#4a4939"
+    icon_color: "#4a4939"
+    ripple_color: "#c5bdd2"
+    selected_color: "#0c6c4d"
+
+
+<DrawerLabelItem@MDNavigationDrawerItem>
+    text_color: "#4a4939"
+    icon_color: "#4a4939"
+    focus_behavior: False
+    selected_color: "#4a4939"
+    _no_ripple_effect: True
