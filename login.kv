@@ -560,6 +560,16 @@ ScreenManagement:
                         icon: "send"
                         text: "Outbox"
 
+                    
+                    MDNavigationDrawerDivider:
+
+                    DrawerClickableItem:
+                        icon: "arrow-left"
+                        text: "Volver"
+                        on_release:
+                            app.root.current = 'mainwindow'
+                            root.manager.transition.direction = "right"
+                    
                     MDNavigationDrawerDivider:
 
                     MDNavigationDrawerLabel:
