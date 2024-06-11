@@ -10,10 +10,10 @@
     <div class="background-image"></div>
     <div class="login-container">
         <div class="logo-container">
-            <img src="/static/ulagos.jpg" alt="Logo Universidad de Los Lagos">
+            <img src="{{ url_for('static', filename='ulagos.jpg') }}" alt="Logo Universidad de Los Lagos">
         </div>
         <h1>Iniciar Sesión</h1>
-        <form action="login.php" method="post">
+        <form action="/login" method="post">
             <div class="input-container">
                 <label for="username">Nombre de Usuario</label>
                 <input type="text" id="username" name="username" required>
@@ -30,7 +30,7 @@
             <a href="#" class="forgot-password">¿Olvidó su contraseña?</a>
         </form>
         <div class="register-option">
-            <p>¿No tienes una cuenta? <a href="/register">Regístrate aquí</a>.</p>
+            <p>¿No tienes una cuenta? <a href="/registro-estacionamientos">Regístrate aquí</a>.</p>
         </div>
     </div>
 
