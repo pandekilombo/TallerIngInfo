@@ -303,12 +303,23 @@ class NavDrawer(BoxLayout):
     manager = ObjectProperty()
     nav_drawer = ObjectProperty()
 
+class ContadorAutosInscritos():
+    def __init__(self):
+        self.Autos=0
 
+
+    def AutoAñadido(self):
+        self.Autos=self.Autos+1
+    def Reiniciar(self):
+        self.Autos=0
+    def MostrarCantidad(self):
+        print(self.Autos)
+ContadorDeAutos=ContadorAutosInscritos()
 
 
 #Creacion de la APP
 class MainApp(MDApp):
-
+    
     #Base de la app
     def build(self):
         Window.size = (260, 500)
@@ -319,6 +330,8 @@ class MainApp(MDApp):
         
         #Creacion de la pantalla con el archivo .kv externo
         return Builder.load_file('login.kv')
+
+
 
     def switchWindow(self, window, boolean_val):
      if boolean_val:
@@ -331,8 +344,11 @@ class MainApp(MDApp):
 
 
 
+
+
         if window == "adminwindow":
             # Obtener una referencia a la colección en Firestore
+
             docs_ref = db.collection("Usuarios")
 
             # Recuperar todos los documentos en la colección
@@ -351,9 +367,9 @@ class MainApp(MDApp):
                 nombre = user_data.get("Nombre", "")
                 rol = user_data.get("Rol", "")
 
-    
-                data.append((nombre_documento, nombre, apellido1, apellido2, contrasena, rol))
 
+                data.append((nombre_documento, nombre, apellido1, apellido2, contrasena, rol))
+            
 
 
             self.root.get_screen('adminwindow').ids.container.clear_widgets()
@@ -377,8 +393,17 @@ class MainApp(MDApp):
             ))
 
         if window == "vehwindow":
+            
+
+            
+            
+            
             # Obtener una referencia a la colección en Firestore
+            
             docs_ref = db.collection('Usuarios').document(NewBackup.GiveUserID()).collection('Vehiculos')
+
+            #Contador de autos registrados en la cuenta
+            ContadorDeAutos.Reiniciar()
 
             # Recuperar todos los documentos en la colección
             docs = docs_ref.stream()
@@ -394,11 +419,13 @@ class MainApp(MDApp):
                 Modelo= user_data.get("Modelo","")
                 Anio= user_data.get("Año","")
                 Patente= user_data.get("Patente","")
-    
+
+                ContadorDeAutos.AutoAñadido()
+
                 data.append((nombre_documento, Marca, Modelo, Anio, Patente))
-                
-            print("Datos: \n")
-            print(data)
+            ContadorDeAutos.MostrarCantidad()
+           # print("Datos: \n")
+           # print(data)
             if len(data)>=1:
                 self.root.get_screen('vehwindow').ids.container.clear_widgets()
                 self.root.get_screen('vehwindow').ids.container.add_widget(MDDataTable(
@@ -419,7 +446,7 @@ class MainApp(MDApp):
                     
                 ))                
             else:
-                print("Fixeando el minimo de autos")
+                print("No hay autos registrados")
             
 
 
