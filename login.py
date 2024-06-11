@@ -186,7 +186,15 @@ class Vehiculos(MDScreen):
         # Crear instancia de MDDataTable
         pass
 
-
+class BackUp():
+    def __init__(self):
+        self.UserID=""
+    def SaveUserID(self,User):
+        self.UserID=User
+    def GiveUserID(self):
+        return self.UserID
+    
+NewBackup=BackUp()
 
 class LoginScreen(MDScreen):
     # Pantalla de inicio de sesión
@@ -226,6 +234,8 @@ class LoginScreen(MDScreen):
                 
                 #PROBLEMA
                 if self.checkUser(user, password) == True:
+                    NewBackup.SaveUserID(user)
+                    print(NewBackup.GiveUserID())
                     return True
                 else:
                     self.invalidPopup()
@@ -368,7 +378,7 @@ class MainApp(MDApp):
 
         if window == "vehwindow":
             # Obtener una referencia a la colección en Firestore
-            docs_ref = db.collection('Usuarios').document('Miguel_Contreras1').collection('Vehiculos')
+            docs_ref = db.collection('Usuarios').document(NewBackup.GiveUserID()).collection('Vehiculos')
 
             # Recuperar todos los documentos en la colección
             docs = docs_ref.stream()
@@ -389,24 +399,27 @@ class MainApp(MDApp):
                 
             print("Datos: \n")
             print(data)
-            self.root.get_screen('vehwindow').ids.container.clear_widgets()
-            self.root.get_screen('vehwindow').ids.container.add_widget(MDDataTable(
-                pos_hint={'center_x': 0.5, 'center_y': 0.7},
-                size_hint=(1, 1),
-                check=False,
-                use_pagination=True,
-                rows_num=len(data),
-                column_data=[
-                    ("ID", dp(10)),                
-                    ("Marca", dp(20)),
-                    ("Modelo", dp(20)),
-                    ("Año", dp(20)),
-                    ("Patente", dp(15))
-                 
-                ],  # Definir las columnas
-                row_data=data  # Pasar los datos recuperados directamente
-                
-            ))                
+            if len(data)>=1:
+                self.root.get_screen('vehwindow').ids.container.clear_widgets()
+                self.root.get_screen('vehwindow').ids.container.add_widget(MDDataTable(
+                    pos_hint={'center_x': 0.5, 'center_y': 0.7},
+                    size_hint=(1, 1),
+                    check=False,
+                    use_pagination=True,
+                    rows_num=len(data),
+                    column_data=[
+                        ("ID", dp(10)),                
+                        ("Marca", dp(20)),
+                        ("Modelo", dp(20)),
+                        ("Año", dp(20)),
+                        ("Patente", dp(15))
+                    
+                    ],  # Definir las columnas
+                    row_data=data  # Pasar los datos recuperados directamente
+                    
+                ))                
+            else:
+                print("Fixeando el minimo de autos")
             
 
 
