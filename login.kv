@@ -10,8 +10,6 @@ ScreenManagement:
     Anadir_Vehiculo:
     Eliminar_Vehiculo:
     Reservar_Espacio:
-
-
 <LoginScreen>:
     name: 'login'
     Image:
@@ -555,6 +553,9 @@ ScreenManagement:
                        # right_text: "+99"
                         text_right_color: "#4a4939"
                         text: "Añadir Auto"
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            root.Añadir_Vehiculo()
 
                     DrawerClickableItem:
                         icon: "pencil-plus"
@@ -569,9 +570,12 @@ ScreenManagement:
                     DrawerClickableItem:
                         icon: "arrow-left"
                         text: "Volver"
+                      
                         on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
                             app.root.current = 'mainwindow'
                             root.manager.transition.direction = "right"
+
                     
                     MDNavigationDrawerDivider:
 
@@ -588,10 +592,36 @@ ScreenManagement:
                         text_right_color: "#4a4939"
                         text: "Cerrar Sesión"
                         on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
                             app.switchWindow('login', True)
                             app.root.current = 'login'
                             root.manager.transition.direction = "up"       
+<Content>
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "250dp"
 
+    MDTextField:
+        id: marca
+        hint_text: "Marca"
+
+    MDTextField:
+        id: modelo
+        hint_text: "Modelo"
+
+ 
+    MDTextField:
+        id: anio
+        hint_text: "Año"
+        
+                        
+
+
+    MDTextField:
+        id: patente
+        hint_text: "Patente"
+        
 
 
 
@@ -797,99 +827,9 @@ ScreenManagement:
 
                         
 
+                       
 
 
-<Anadir_Vehiculo>
-    name: 'agregar_veh'
-    id: agregar_veh
-    MDScreen:
-        MDTopAppBar:
-            title:'Añadir Vehiculo'
-            pos_hint:{'top':1}
-            md_bg_color: app.theme_cls.primary_dark
-            
-        MDFloatLayout:
-            pos: 0, -64.5
-            size_hint: .3, 1
-            md_bg_color: app.theme_cls.primary_color
-            height: root.height            
-            MDList:
-                md_bg_color: app.theme_cls.primary_dark     
-                size_hint_y: None  # Desactiva el tamaño automático en el eje y
-                height: self.minimum_height  # Establece la altura de la lista para que se ajuste automáticamente al contenido
-                pos_hint: {'center_y': 0.6}  # Centra verticalmente la lista de iconos en el layout
-                ListItemWithChip:
-                    text: 'Volver'
-                    size_hint_y: None  # Desactiva el tamaño automático en el eje y
-                    height: dp(48)  # Altura deseada del ListItemWithChip
-                    on_release:
-                        app.switchWindow('vehwindow', True)
-                        app.root.current = 'vehwindow'
-                        root.manager.transition.direction = "up"
-                    IconLeftWidget:
-                        icon: 'logout'
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
-                        font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
-        MDBoxLayout:
-            id: agregar_prod_box
-            pos: 0, -64.5    
-            orientation: 'vertical'
-            size_hint: 0.7, 0.9
-            pos_hint: {'right': 1}
-         #   md_bg_color: app.theme_cls.primary_dark
-           
-            MDTextField:
-                id: id_prod
-                hint_text: "Patente"
-                icon_right: "cuenta"
-                size_hint_x: 0.5
-                size_hint_y: None               
-                width: 200
-                height: 200
-                font_size: 18
-                pos_hint: {"center_x": 0.5}
-
-            MDTextField:
-                id: nombre
-                hint_text: "Nombre"
-                icon_right: "nombre"
-                size_hint_x: 0.5
-                size_hint_y: None                
-                width: 200
-                height: 200
-                font_size: 18
-                pos_hint: {"center_x": 0.5}
-
-            MDTextField:
-                id: tipo_prod
-                hint_text: "Tipo de Vehiculo"
-                icon_right: "apellidos"
-                size_hint_x: 0.5
-                width: 200
-                font_size: 18
-                size_hint_y: None
-                height: 200                          
-                pos_hint: {"center_x": 0.5}
-            
-
-            MDRoundFlatButton:
-                text: "Agregar - Editar"
-                font_size: 12
-                pos_hint: {"center_x": 0.5}
-                size_hint_y: None          
-
-                height: 200                          
-                width: 200
-                on_press: root.agregar()
-            MDBoxLayout:
-            #   md_bg_color: app.theme_cls.primary_dark            
-             #   text: "Fix"
-                font_size: 12
-                pos_hint: {"center_x": 0.5}
-                size_hint_y: 1          
-                height: 200                          
-                width: 200
 
 
 

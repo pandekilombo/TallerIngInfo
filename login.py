@@ -20,7 +20,7 @@ from kivymd.uix.datatables import MDDataTable
 from kivy.metrics import dp
 from kivy.core.window import Window
 from kivymd.uix.button import MDIconButton
-
+from kivymd.uix.button import MDFlatButton
 from kivy.properties import StringProperty, ObjectProperty
 # Initialize Firebase Admin SDK
 cred = credentials.Certificate('serviceAccountKey.json')
@@ -132,18 +132,7 @@ class Anadir_Usuario(MDScreen):
 
 class Anadir_Vehiculo(MDScreen):
     def agregar(self):
-        res = db.collection("Vehiculos").document(self.ids.id_prod.text).set({  # insert document
-            'Nombre': self.ids.nombre.text,
-            'Tipo_de_Vehiculo': self.ids.tipo_prod.text,
-                                   
-         
-        })
-        self.ids.id_prod.text = ""
-        self.ids.nombre.text = ""
-        self.ids.tipo_prod.text = ""
-        self.ids.num_stock.text = ""
-        self.ids.stock_estado.text = ""                
-        print(res)
+        pass
 
 class Eliminar_Vehiculo(MDScreen):
     def eliminar(self):
@@ -180,11 +169,67 @@ class AdminWindow(MDScreen):
         print("test")
 
 class Vehiculos(MDScreen):
+    dialog = None
     def __init__(self, **kwargs):
         super().__init__(**kwargs)    
     def build(self):
         # Crear instancia de MDDataTable
         pass
+    def Insertar_Auto(self,marca,modelo,año,patente):
+        if self.dialog.content_cls.ids.marca.text != "" and self.dialog.content_cls.ids.modelo.text !="" and self.dialog.content_cls.ids.anio.text != "" and self.dialog.content_cls.ids.patente.text !="":
+            res = db.collection("Usuarios").document(NewBackup.GiveUserID()).collection("Vehiculos").document(str((ContadorDeAutos.DameNumero())+1)).set({  # insert document
+                'Marca': marca,
+                'Modelo': modelo,
+                'Año': año,
+                'Patente': patente,
+                                    
+            
+            })             
+            self.dialog.content_cls.ids.marca.text=""
+            self.dialog.content_cls.ids.modelo.text=""
+            self.dialog.content_cls.ids.anio.text=""
+            self.dialog.content_cls.ids.patente.text=""
+            ContadorDeAutos.AutoAñadido()
+            print(res)
+        else:
+            print("campos vacios")
+        
+
+
+    def Añadir_Vehiculo(self):
+        if not self.dialog:
+            self.dialog = MDDialog(
+                title="Address:",
+                type="custom",
+                content_cls=Content(),
+                buttons=[
+                    MDFlatButton(
+                        text="CANCEL",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        
+                    ),
+                    MDFlatButton(
+                        text="OK",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.insertar_auto_from_content,
+                    ),
+                ],
+            )
+        self.dialog.open()
+
+    def insertar_auto_from_content(self, *args):
+        marca = self.dialog.content_cls.ids.marca.text
+        modelo = self.dialog.content_cls.ids.modelo.text
+        año = self.dialog.content_cls.ids.anio.text
+        patente = self.dialog.content_cls.ids.patente.text
+
+        self.Insertar_Auto(marca, modelo, año, patente)
+class Content(BoxLayout):
+    pass
+
+
 
 class BackUp():
     def __init__(self):
@@ -318,6 +363,7 @@ class ContadorAutosInscritos():
         print(self.Autos)
 
     def DameNumero(self):
+
         return self.Autos
     
 ContadorDeAutos=ContadorAutosInscritos()
