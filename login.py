@@ -252,15 +252,79 @@ class Vehiculos(MDScreen):
 
 
     def Quitar_Auto2(self,Auto):
-        res = db.collection("Usuarios").document(NewBackup.GiveUserID()).collection("Vehiculos").document(Auto).delete()  # delete document
+        res = db.collection("Usuarios").document(str(NewBackup.GiveUserID())).collection("Vehiculos").document(Auto).delete()  # delete document
         self.dialog.content_cls.ids.Auto_Borrar.text=""
         print(res)        
+
+
+
+    def Actualizar_Auto(self):
+        if not self.dialog:
+            self.dialog = MDDialog(
+                title="",
+                type="custom",
+                content_cls=Content3(),
+                buttons=[
+                    MDFlatButton(
+                        text="CANCEL",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        
+                    ),
+                    MDFlatButton(
+                        text="OK",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.Actualizar_auto_from_content,
+                    ),
+                ],
+            )
+        self.dialog.open()             
+
+
+    def Taer_Datos(self,*args,user,idauto):
+        docs_ref = db.collection("Usuarios").document(user).collection("Vehiculos").document(idauto)
+        self.dialog.content_cls.ids.marca.txt=""
+
 
     def quitar_auto_from_content(self, *args):
 
         Auto = self.dialog.content_cls.ids.Auto_Borrar.text
         self.Quitar_Auto2(Auto)
 
+
+
+
+    def Actualizar_Auto2(self,idauto,marca,modelo,año,patente):
+        if self.dialog.content_cls.ids.marca.text != "" and self.dialog.content_cls.ids.modelo.text !="" and self.dialog.content_cls.ids.anio.text != "" and self.dialog.content_cls.ids.patente.text !="":
+            res = db.collection("Usuarios").document(NewBackup.GiveUserID()).collection("Vehiculos").document(idauto).set({  # insert document
+                'Marca': marca,
+                'Modelo': modelo,
+                'Año': año,
+                'Patente': patente,
+
+
+            
+            })
+            self.dialog.content_cls.ids.idauto.text=""             
+            self.dialog.content_cls.ids.marca.text=""
+            self.dialog.content_cls.ids.modelo.text=""
+            self.dialog.content_cls.ids.anio.text=""
+            self.dialog.content_cls.ids.patente.text=""
+            
+            print(res)
+        else:
+            print("campos vacios")        
+
+
+    def Actualizar_auto_from_content(self, *args):
+        idauto = self.dialog.content_cls.ids.idauto.text
+        marca = self.dialog.content_cls.ids.marca.text
+        modelo = self.dialog.content_cls.ids.modelo.text
+        año = self.dialog.content_cls.ids.anio.text
+        patente = self.dialog.content_cls.ids.patente.text
+
+        self.Actualizar_Auto2(idauto,marca, modelo, año, patente)
 
     def insertar_auto_from_content(self, *args):
         marca = self.dialog.content_cls.ids.marca.text
@@ -269,12 +333,15 @@ class Vehiculos(MDScreen):
         patente = self.dialog.content_cls.ids.patente.text
 
         self.Insertar_Auto(marca, modelo, año, patente)
+
 class Content(BoxLayout):
     pass
 
 class Content2(BoxLayout):
     pass
 
+class Content3(BoxLayout):
+    pass
 
 
 

@@ -560,6 +560,9 @@ ScreenManagement:
                     DrawerClickableItem:
                         icon: "pencil-plus"
                         text: "Modificar Auto"
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            root.Actualizar_Auto()                          
 
                     DrawerClickableItem:
                         icon: "minus-thick"
@@ -636,7 +639,36 @@ ScreenManagement:
         hint_text: "ID del Auto"
 
 
+<Content3>
 
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "300dp"
+
+    MDTextField:
+        id: idauto
+        hint_text: "ID"
+
+    MDTextField:
+        id: marca
+        hint_text: "Marca"
+
+    MDTextField:
+        id: modelo
+        hint_text: "Modelo"
+
+ 
+    MDTextField:
+        id: anio
+        hint_text: "Año"
+        
+                        
+
+
+    MDTextField:
+        id: patente
+        hint_text: "Patente"
 
 <Anadir_Usuario>
     name: 'agregar_user'
