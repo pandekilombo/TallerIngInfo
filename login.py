@@ -100,6 +100,30 @@ class MainWindow(MDScreen):
     def Test(self):
         print("Cargando Vehiculos")
         return True
+    
+
+
+class ContadorAutosInscritos():
+    def __init__(self):
+        self.Autos=0
+
+
+    def AutoAñadido(self):
+        self.Autos=self.Autos+1
+
+    def Reiniciar(self):
+        self.Autos=0
+
+    def MostrarCantidad(self):
+        print(self.Autos)
+
+    def DameNumero(self):
+
+        return self.Autos
+    
+
+ContadorDeAutos=ContadorAutosInscritos()
+
 
 
 class Eliminar_Usuario(MDScreen):
@@ -183,14 +207,15 @@ class Vehiculos(MDScreen):
         super().__init__(**kwargs)    
     def build(self):
         # Crear instancia de MDDataTable
+ 
         pass
-    def Insertar_Auto(self,marca,modelo,año,patente):
+    def Insertar_Auto(self,marca,modelo,anio,patente):
         if self.dialog.content_cls.ids.marca.text != "" and self.dialog.content_cls.ids.modelo.text !="" and self.dialog.content_cls.ids.anio.text != "" and self.dialog.content_cls.ids.patente.text !="":
-            res = db.collection("Usuarios").document(NewBackup.GiveUserID()).collection("Vehiculos").document(str((ContadorDeAutos.DameNumero())+1)).set({  # insert document
+            res = db.collection("Usuarios").document(NewBackup.GiveUserID()).collection("Vehiculos").document(patente).set({  # insert document
                 'Marca': marca,
                 'Modelo': modelo,
-                'Año': año,
-                'Patente': patente,
+                'anio': anio,
+
                                     
             
             })             
@@ -198,14 +223,16 @@ class Vehiculos(MDScreen):
             self.dialog.content_cls.ids.modelo.text=""
             self.dialog.content_cls.ids.anio.text=""
             self.dialog.content_cls.ids.patente.text=""
-            ContadorDeAutos.AutoAñadido()
+  
             print(res)
         else:
             print("campos vacios")
-        
+    def LimpiarDialog(self):
+        self.dialog=None
 
 
     def Añadir_Vehiculo(self):
+        self.LimpiarDialog()
         if not self.dialog:
             self.dialog = MDDialog(
                 title="Address:",
@@ -228,6 +255,7 @@ class Vehiculos(MDScreen):
             )
         self.dialog.open()
     def Quitar_Auto(self):
+        self.LimpiarDialog()
         if not self.dialog:
             self.dialog = MDDialog(
                 title="Address:",
@@ -252,13 +280,19 @@ class Vehiculos(MDScreen):
 
 
     def Quitar_Auto2(self,Auto):
-        res = db.collection("Usuarios").document(str(NewBackup.GiveUserID())).collection("Vehiculos").document(Auto).delete()  # delete document
-        self.dialog.content_cls.ids.Auto_Borrar.text=""
-        print(res)        
+        if self.dialog.content_cls.ids.Auto_Borrar.text != "" :
+            res = db.collection("Usuarios").document(str(NewBackup.GiveUserID())).collection("Vehiculos").document(Auto).delete()  # delete document
+            self.dialog.content_cls.ids.Auto_Borrar.text=""
+            print(res)        
 
 
+    def quitar_auto_from_content(self, *args):
+
+        Auto = self.dialog.content_cls.ids.Auto_Borrar.text
+        self.Quitar_Auto2(Auto)
 
     def Actualizar_Auto(self):
+        self.LimpiarDialog()
         if not self.dialog:
             self.dialog = MDDialog(
                 title="",
@@ -287,26 +321,21 @@ class Vehiculos(MDScreen):
         self.dialog.content_cls.ids.marca.txt=""
 
 
-    def quitar_auto_from_content(self, *args):
-
-        Auto = self.dialog.content_cls.ids.Auto_Borrar.text
-        self.Quitar_Auto2(Auto)
 
 
 
 
-    def Actualizar_Auto2(self,idauto,marca,modelo,año,patente):
+    def Actualizar_Auto2(self,marca,modelo,anio,patente):
         if self.dialog.content_cls.ids.marca.text != "" and self.dialog.content_cls.ids.modelo.text !="" and self.dialog.content_cls.ids.anio.text != "" and self.dialog.content_cls.ids.patente.text !="":
-            res = db.collection("Usuarios").document(NewBackup.GiveUserID()).collection("Vehiculos").document(idauto).set({  # insert document
+            res = db.collection("Usuarios").document(NewBackup.GiveUserID()).collection("Vehiculos").document(patente).update({  # insert document
                 'Marca': marca,
                 'Modelo': modelo,
-                'Año': año,
-                'Patente': patente,
+                'anio': anio,
+                
 
 
             
-            })
-            self.dialog.content_cls.ids.idauto.text=""             
+            })        
             self.dialog.content_cls.ids.marca.text=""
             self.dialog.content_cls.ids.modelo.text=""
             self.dialog.content_cls.ids.anio.text=""
@@ -318,21 +347,21 @@ class Vehiculos(MDScreen):
 
 
     def Actualizar_auto_from_content(self, *args):
-        idauto = self.dialog.content_cls.ids.idauto.text
+
         marca = self.dialog.content_cls.ids.marca.text
         modelo = self.dialog.content_cls.ids.modelo.text
-        año = self.dialog.content_cls.ids.anio.text
+        anio = self.dialog.content_cls.ids.anio.text
         patente = self.dialog.content_cls.ids.patente.text
 
-        self.Actualizar_Auto2(idauto,marca, modelo, año, patente)
+        self.Actualizar_Auto2(marca, modelo, anio, patente)
 
     def insertar_auto_from_content(self, *args):
         marca = self.dialog.content_cls.ids.marca.text
         modelo = self.dialog.content_cls.ids.modelo.text
-        año = self.dialog.content_cls.ids.anio.text
+        anio = self.dialog.content_cls.ids.anio.text
         patente = self.dialog.content_cls.ids.patente.text
 
-        self.Insertar_Auto(marca, modelo, año, patente)
+        self.Insertar_Auto(marca, modelo, anio, patente)
 
 class Content(BoxLayout):
     pass
@@ -452,25 +481,12 @@ class NavDrawer(BoxLayout):
     manager = ObjectProperty()
     nav_drawer = ObjectProperty()
 
-class ContadorAutosInscritos():
-    def __init__(self):
-        self.Autos=0
 
 
-    def AutoAñadido(self):
-        self.Autos=self.Autos+1
 
-    def Reiniciar(self):
-        self.Autos=0
 
-    def MostrarCantidad(self):
-        print(self.Autos)
-
-    def DameNumero(self):
-
-        return self.Autos
     
-ContadorDeAutos=ContadorAutosInscritos()
+
 
 
 #Creacion de la APP
@@ -573,12 +589,11 @@ class MainApp(MDApp):
                 nombre_documento = doc.id
                 Marca = user_data.get("Marca","")
                 Modelo= user_data.get("Modelo","")
-                Anio= user_data.get("Año","")
-                Patente= user_data.get("Patente","")
+                Anio= user_data.get("anio","")
 
                 ContadorDeAutos.AutoAñadido()
 
-                data.append((nombre_documento, Marca, Modelo, Anio, Patente))
+                data.append((Marca, Modelo, Anio,nombre_documento))
             ContadorDeAutos.MostrarCantidad()
            # print("Datos: \n")
            # print(data)
@@ -591,7 +606,7 @@ class MainApp(MDApp):
                     use_pagination=True,
                     rows_num=len(data),
                     column_data=[
-                        ("ID", dp(10)),                
+             
                         ("Marca", dp(20)),
                         ("Modelo", dp(20)),
                         ("Año", dp(20)),
