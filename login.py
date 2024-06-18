@@ -65,6 +65,8 @@ class InvalidLoginPopup(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+#Dialogo de error campos vacios
+
 class ValidLoginPopup(BoxLayout):
     # Abre un cuadro de diálogo cuando el usuario ingresa detalles válidos al iniciar sesión
     def __init__(self, **kwargs):
@@ -209,6 +211,9 @@ class Vehiculos(MDScreen):
         # Crear instancia de MDDataTable
  
         pass
+
+    def close_dialog(self, *args):
+        self.dialog.dismiss()    
     def Insertar_Auto(self,marca,modelo,anio,patente):
         if self.dialog.content_cls.ids.marca.text != "" and self.dialog.content_cls.ids.modelo.text !="" and self.dialog.content_cls.ids.anio.text != "" and self.dialog.content_cls.ids.patente.text !="":
             res = db.collection("Usuarios").document(NewBackup.GiveUserID()).collection("Vehiculos").document(patente).set({  # insert document
@@ -226,6 +231,7 @@ class Vehiculos(MDScreen):
   
             print(res)
         else:
+            self.Error()
             print("campos vacios")
     def LimpiarDialog(self):
         self.dialog=None
@@ -235,18 +241,19 @@ class Vehiculos(MDScreen):
         self.LimpiarDialog()
         if not self.dialog:
             self.dialog = MDDialog(
-                title="Address:",
+                title="Añadir Vehiculo:",
                 type="custom",
                 content_cls=Content(),
                 buttons=[
                     MDFlatButton(
-                        text="CANCEL",
+                        text="Cerrar",
                         theme_text_color="Custom",
                         text_color=self.theme_cls.primary_color,
+                        on_release=self.close_dialog,
                         
                     ),
                     MDFlatButton(
-                        text="OK",
+                        text="Ok",
                         theme_text_color="Custom",
                         text_color=self.theme_cls.primary_color,
                         on_release=self.insertar_auto_from_content,
@@ -254,22 +261,26 @@ class Vehiculos(MDScreen):
                 ],
             )
         self.dialog.open()
+
+
     def Quitar_Auto(self):
+
         self.LimpiarDialog()
         if not self.dialog:
             self.dialog = MDDialog(
-                title="Address:",
+                title="Eliminar Vehiculo:",
                 type="custom",
                 content_cls=Content2(),
                 buttons=[
                     MDFlatButton(
-                        text="CANCEL",
+                        text="Cerrar",
                         theme_text_color="Custom",
                         text_color=self.theme_cls.primary_color,
+                        on_release=self.close_dialog,
                         
                     ),
                     MDFlatButton(
-                        text="OK",
+                        text="Ok",
                         theme_text_color="Custom",
                         text_color=self.theme_cls.primary_color,
                         on_release=self.quitar_auto_from_content,
@@ -279,34 +290,62 @@ class Vehiculos(MDScreen):
         self.dialog.open()       
 
 
+
+
+    def Error(self):
+        self.close_dialog()
+        self.LimpiarDialog()
+        if not self.dialog:
+            self.dialog = MDDialog(
+                title="Campo Incorrecto",
+                type="custom",
+                content_cls=ErrorCampoVacio(),
+                buttons=[
+                    MDFlatButton(
+                        text="Cerrar",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.close_dialog,
+                        
+                    ),
+                ],
+            )
+        self.dialog.open()   
+
+
+
+
     def Quitar_Auto2(self,Auto):
-        if self.dialog.content_cls.ids.Auto_Borrar.text != "" :
-            res = db.collection("Usuarios").document(str(NewBackup.GiveUserID())).collection("Vehiculos").document(Auto).delete()  # delete document
-            self.dialog.content_cls.ids.Auto_Borrar.text=""
-            print(res)        
+        res = db.collection("Usuarios").document(str(NewBackup.GiveUserID())).collection("Vehiculos").document(Auto).delete()  # delete document
+        self.dialog.content_cls.ids.Auto_Borrar.text=""
+        
+        print(res)        
 
 
     def quitar_auto_from_content(self, *args):
-
-        Auto = self.dialog.content_cls.ids.Auto_Borrar.text
-        self.Quitar_Auto2(Auto)
-
+        if self.dialog.content_cls.ids.Auto_Borrar.text != "" :
+            Auto = self.dialog.content_cls.ids.Auto_Borrar.text
+            self.Quitar_Auto2(Auto)
+        else: 
+            print("Campo Vacio")
+      
+            self.Error()        
     def Actualizar_Auto(self):
         self.LimpiarDialog()
         if not self.dialog:
             self.dialog = MDDialog(
-                title="",
+                title="Actualizar Vehiculo",
                 type="custom",
                 content_cls=Content3(),
                 buttons=[
                     MDFlatButton(
-                        text="CANCEL",
+                        text="Cerrar",
                         theme_text_color="Custom",
                         text_color=self.theme_cls.primary_color,
-                        
+                        on_release=self.close_dialog,
                     ),
                     MDFlatButton(
-                        text="OK",
+                        text="Ok",
                         theme_text_color="Custom",
                         text_color=self.theme_cls.primary_color,
                         on_release=self.Actualizar_auto_from_content,
@@ -314,13 +353,6 @@ class Vehiculos(MDScreen):
                 ],
             )
         self.dialog.open()             
-
-
-    def Taer_Datos(self,*args,user,idauto):
-        docs_ref = db.collection("Usuarios").document(user).collection("Vehiculos").document(idauto)
-        self.dialog.content_cls.ids.marca.txt=""
-
-
 
 
 
@@ -343,7 +375,8 @@ class Vehiculos(MDScreen):
             
             print(res)
         else:
-            print("campos vacios")        
+            self.Error()            
+            print("campos vacios o no encontrado")        
 
 
     def Actualizar_auto_from_content(self, *args):
@@ -371,7 +404,8 @@ class Content2(BoxLayout):
 
 class Content3(BoxLayout):
     pass
-
+class ErrorCampoVacio(BoxLayout):
+    pass
 
 
 class LoginScreen(MDScreen):
