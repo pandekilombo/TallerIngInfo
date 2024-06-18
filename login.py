@@ -344,13 +344,32 @@ class Vehiculos(MDScreen):
             )
         self.dialog.open()   
 
-
-
+    def Success(self):
+        # Correcto
+        self.close_dialog()
+        self.LimpiarDialog()
+        if not self.dialog:
+            self.dialog = MDDialog(
+                title="Accion Existosa",
+                type="custom",
+                content_cls=Correcto(),
+                buttons=[
+                    MDFlatButton(
+                        text="Cerrar",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.close_dialog,
+                        
+                    ),
+                ],
+            )
+        self.dialog.open()   
 
     def Quitar_Auto2(self,Auto):
         res = db.collection("Usuarios").document(str(NewBackup.GiveUserID())).collection("Vehiculos").document(Auto).delete()  # delete document
         self.dialog.content_cls.ids.Auto_Borrar.text=""
-        
+        self.close_dialog()
+        self.LimpiarDialog()        
         print(res)        
 
 
@@ -437,6 +456,10 @@ class Content2(BoxLayout):
 class Content3(BoxLayout):
     pass
 class ErrorCampoVacio(BoxLayout):
+    pass
+
+
+class Correcto(BoxLayout):
     pass
 
 
@@ -633,8 +656,9 @@ class MainApp(MDApp):
         if window == "vehwindow":
             
 
-            
-            
+            #PARA EXTRAER LOS DATOS
+
+
             
             # Obtener una referencia a la colección en Firestore
             
@@ -662,7 +686,7 @@ class MainApp(MDApp):
                 data.append((Marca, Modelo, Anio,nombre_documento))
             ContadorDeAutos.MostrarCantidad()
            # print("Datos: \n")
-           # print(data)
+            print(data)
             if len(data)>=1:
                 self.root.get_screen('vehwindow').ids.container.clear_widgets()
                 self.root.get_screen('vehwindow').ids.container.add_widget(MDDataTable(
