@@ -10,6 +10,9 @@ ScreenManagement:
     Anadir_Vehiculo:
     Eliminar_Vehiculo:
     Reservar_Espacio:
+    Espacio_Reservado:
+    Espacios_Disponibles:
+    
 <LoginScreen>:
     name: 'login'
     Image:
@@ -369,7 +372,7 @@ ScreenManagement:
                     height: dp(48)  # Altura deseada del ListItemWithChip
   
                     on_release:
-                        app.switchWindow('reservar_esp', root.Test())
+                        app.switchWindow('reservar_esp', True)
                         root.manager.transition.direction = "up"
 
                     IconLeftWidget:
@@ -382,7 +385,9 @@ ScreenManagement:
                     text: 'Espacios Disponibles'
                     size_hint_y: None  # Desactiva el tamaño automático en el eje y
                     height: dp(48)  # Altura deseada del ListItemWithChip
-
+                    on_release:
+                        app.switchWindow('esp_disponibles', True)
+                        root.manager.transition.direction = "up"
                     IconLeftWidget:
                         icon: 'cog-outline'
                         theme_text_color: "Custom"
@@ -393,7 +398,7 @@ ScreenManagement:
                     size_hint_y: None  # Desactiva el tamaño automático en el eje y
                     height: dp(48)  # Altura deseada del ListItemWithChip
                     on_release:
-                        app.switchWindow('adminwindow', root.checkAdmin())
+                        app.switchWindow('esp_reservado', True)
                         root.manager.transition.direction = "up"
                     IconLeftWidget:
                         icon: 'badge-account-horizontal'
@@ -521,7 +526,7 @@ ScreenManagement:
                 MDScreen:
 
                     MDTopAppBar:
-                        title: "Mis Vehículos"
+                        title: "Mis Autos Inscritos"
                         elevation: 4
                         pos_hint: {"top": 1}
                         md_bg_color: app.theme_cls.primary_color
@@ -955,77 +960,261 @@ ScreenManagement:
 <Reservar_Espacio>
     name: 'reservar_esp'
     id: reservar_esp
+    
     MDScreen:
-        MDTopAppBar:
-            title:'Reservar Espacio'
-            pos_hint:{'top':1}
-            md_bg_color: app.theme_cls.primary_dark
-            
-        MDFloatLayout:
-            pos: 0, -64.5
-            size_hint: .3, 1
-            md_bg_color: app.theme_cls.primary_color
-            height: root.height            
-            MDList:
-                md_bg_color: app.theme_cls.primary_dark     
-                size_hint_y: None  # Desactiva el tamaño automático en el eje y
-                height: self.minimum_height  # Establece la altura de la lista para que se ajuste automáticamente al contenido
-                pos_hint: {'center_y': 0.6}  # Centra verticalmente la lista de iconos en el layout
-                ListItemWithChip:
-                    text: 'Volver'
-                    size_hint_y: None  # Desactiva el tamaño automático en el eje y
-                    height: dp(48)  # Altura deseada del ListItemWithChip
-                    on_release:
-                        app.switchWindow('vehwindow', True)
-                        app.root.current = 'vehwindow'
-                        root.manager.transition.direction = "up"
-                    IconLeftWidget:
-                        icon: 'logout'
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
-                        font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
+        
         MDBoxLayout:
-            id: agregar_prod_box
-            pos: 0, -64.5    
+            id: container
+            pos: -.2, -64.5    
             orientation: 'vertical'
-            size_hint: 0.7, 0.9
-            pos_hint: {'right': 1}
-         #   md_bg_color: app.theme_cls.primary_dark
+            size_hint: 1.14, 1
+            pos_hint: {'right': 1.05}
+
+        MDNavigationLayout:
+
+            MDScreenManager:
+
+                MDScreen:
+
+                    MDTopAppBar:
+                        title: "Reservar Espacio"
+                        elevation: 4
+                        pos_hint: {"top": 1}
+                        md_bg_color: app.theme_cls.primary_color
+                        text_color: 1, 1, 1, 1
+                       # specific_text_color: "#4a4939"
+                        left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+
+            MDNavigationDrawer:
+                id: nav_drawer
+                radius: (0, 16, 16, 0)
+                pos: -.5,1
+                size_hint: 1, 1
+               # pos_hint: {'left': 1.2}
+                MDNavigationDrawerMenu:
+
+                    MDNavigationDrawerHeader:
+                        title: "Menu"
+                        title_color: app.theme_cls.primary_color
+
+                       # text: "Header text"
+                        spacing: "4dp"
+                        padding: "12dp", 0, 0, "30dp"
+
+                    MDNavigationDrawerLabel:
+                        text: " "
+
+
+                    DrawerClickableItem:
+                        icon: "arrow-left"
+                        text: "Volver"
+                      
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            app.root.current = 'mainwindow'
+                            root.manager.transition.direction = "right"
+
+                    
+                    MDNavigationDrawerDivider:
+
+                    MDNavigationDrawerLabel:
+                        text: "Salir"
+
+                  #  DrawerLabelItem:
+                   #     icon: "information-outline"
+                    #    text: "Label"
+
+                    DrawerClickableItem:
+                        icon: "logout"
+                       # right_text: "+99"
+                        text_right_color: "#4a4939"
+                        text: "Cerrar Sesión"
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            app.switchWindow('login', True)
+                            app.root.current = 'login'
+                            root.manager.transition.direction = "up"  
+
+
+
+
+
+<Espacio_Reservado>:
+    name: 'esp_reservado'
+    id: esp_reservado
+    
+    MDScreen:
+        
+        MDBoxLayout:
+            id: container
+            pos: -.2, -64.5    
+            orientation: 'vertical'
+            size_hint: 1.14, 1
+            pos_hint: {'right': 1.05}
+
+        MDNavigationLayout:
+
+            MDScreenManager:
+
+                MDScreen:
+
+                    MDTopAppBar:
+                        title: "Espacio_Reservado"
+                        elevation: 4
+                        pos_hint: {"top": 1}
+                        md_bg_color: app.theme_cls.primary_color
+                        text_color: 1, 1, 1, 1
+                       # specific_text_color: "#4a4939"
+                        left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+
+            MDNavigationDrawer:
+                id: nav_drawer
+                radius: (0, 16, 16, 0)
+                pos: -.5,1
+                size_hint: 1, 1
+               # pos_hint: {'left': 1.2}
+                MDNavigationDrawerMenu:
+
+                    MDNavigationDrawerHeader:
+                        title: "Menu"
+                        title_color: app.theme_cls.primary_color
+
+                       # text: "Header text"
+                        spacing: "4dp"
+                        padding: "12dp", 0, 0, "30dp"
+
+                    MDNavigationDrawerLabel:
+                        text: " "
+
+
+                    DrawerClickableItem:
+                        icon: "pencil-plus"
+                        text: "Modificar Reserva"
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            root.Actualizar_Reserva()                          
+
+                    DrawerClickableItem:
+                        icon: "minus-thick"
+                        text: "Cancelar Reserva"
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            root.Cancelar_Reserva()                        
+                    MDNavigationDrawerDivider:
+
+                    DrawerClickableItem:
+                        icon: "arrow-left"
+                        text: "Volver"
+                      
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            app.root.current = 'mainwindow'
+                            root.manager.transition.direction = "right"
+
+                    
+                    MDNavigationDrawerDivider:
+
+                    MDNavigationDrawerLabel:
+                        text: "Salir"
+
+                  #  DrawerLabelItem:
+                   #     icon: "information-outline"
+                    #    text: "Label"
+
+                    DrawerClickableItem:
+                        icon: "logout"
+                       # right_text: "+99"
+                        text_right_color: "#4a4939"
+                        text: "Cerrar Sesión"
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            app.switchWindow('login', True)
+                            app.root.current = 'login'
+                            root.manager.transition.direction = "up"  
            
-            MDTextField:
-                id: id_prod
-                hint_text: "Auto"
-                icon_right: "cuenta"
-                size_hint_x: 0.5
-                size_hint_y: None               
-                width: 200
-                height: 200
-                font_size: 18
-                pos_hint: {"center_x": 0.5}
-
-            MDTextField:
-                id: nombre
-                hint_text: "Espacio"
-                icon_right: "nombre"
-                size_hint_x: 0.5
-                size_hint_y: None                
-                width: 200
-                height: 200
-                font_size: 18
-                pos_hint: {"center_x": 0.5}
-
-            MDTextField:
-                id: tipo_prod
-                hint_text: "Lugar"
-                icon_right: "apellidos"
-                size_hint_x: 0.5
-                width: 200
-                font_size: 18
-                size_hint_y: None
-                height: 200                          
-                pos_hint: {"center_x": 0.5}
+            
 
 
+
+
+
+<Espacios_Disponibles>:
+    name: 'esp_disponibles'
+    id: esp_disponibles
+    
+    MDScreen:
+        
+        MDBoxLayout:
+            id: container
+            pos: -.2, -64.5    
+            orientation: 'vertical'
+            size_hint: 1.14, 1
+            pos_hint: {'right': 1.05}
+
+        MDNavigationLayout:
+
+            MDScreenManager:
+
+                MDScreen:
+
+                    MDTopAppBar:
+                        title: "Espacios Disponibles"
+                        elevation: 4
+                        pos_hint: {"top": 1}
+                        md_bg_color: app.theme_cls.primary_color
+                        text_color: 1, 1, 1, 1
+                       # specific_text_color: "#4a4939"
+                        left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+
+            MDNavigationDrawer:
+                id: nav_drawer
+                radius: (0, 16, 16, 0)
+                pos: -.5,1
+                size_hint: 1, 1
+               # pos_hint: {'left': 1.2}
+                MDNavigationDrawerMenu:
+
+                    MDNavigationDrawerHeader:
+                        title: "Menu"
+                        title_color: app.theme_cls.primary_color
+
+                       # text: "Header text"
+                        spacing: "4dp"
+                        padding: "12dp", 0, 0, "30dp"
+
+                    MDNavigationDrawerLabel:
+                        text: " "
+
+
+                    DrawerClickableItem:
+                        icon: "arrow-left"
+                        text: "Volver"
+                      
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            app.root.current = 'mainwindow'
+                            root.manager.transition.direction = "right"
+
+                    
+                    MDNavigationDrawerDivider:
+
+                    MDNavigationDrawerLabel:
+                        text: "Salir"
+
+                  #  DrawerLabelItem:
+                   #     icon: "information-outline"
+                    #    text: "Label"
+
+                    DrawerClickableItem:
+                        icon: "logout"
+                       # right_text: "+99"
+                        text_right_color: "#4a4939"
+                        text: "Cerrar Sesión"
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            app.switchWindow('login', True)
+                            app.root.current = 'login'
+                            root.manager.transition.direction = "up"  
 
 #Test
 

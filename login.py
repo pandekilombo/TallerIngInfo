@@ -190,6 +190,38 @@ class Reservar_Espacio(MDScreen):
         self.ids.nlugar.text = ""
         print(res)
 
+    
+class Espacio_Reservado(MDScreen):
+    def agregar(self):
+        res = db.collection("Espacios").document(self.ids.id_prod.text).set({  # insert document
+            'Auto': self.ids.auto.text,
+            'Espacio': self.ids.espacio.text,
+            'Lugar': self.ids.lugar.text,
+                                   
+         
+        })
+        self.ids.id_prod.text = ""
+        self.ids.auto.text = ""
+        self.ids.espacio.text = ""
+        self.ids.nlugar.text = ""
+        print(res)
+
+
+class Espacios_Disponibles(MDScreen):
+    def agregar(self):
+        res = db.collection("Espacios").document(self.ids.id_prod.text).set({  # insert document
+            'Auto': self.ids.auto.text,
+            'Espacio': self.ids.espacio.text,
+            'Lugar': self.ids.lugar.text,
+                                   
+         
+        })
+        self.ids.id_prod.text = ""
+        self.ids.auto.text = ""
+        self.ids.espacio.text = ""
+        self.ids.nlugar.text = ""
+        print(res)
+
 
 
 class AdminWindow(MDScreen):
