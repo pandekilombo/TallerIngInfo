@@ -5,16 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reservar Estacionamiento</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Estilos adicionales específicos para la página de reservar estacionamiento */
+        .reservation-form {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .reservation-form label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .reservation-form input[type="text"],
+        .reservation-form input[type="date"],
+        .reservation-form input[type="time"],
+        .reservation-form select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .reservation-form button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .reservation-form button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
         <a href="/">
-            <img src="/static/ulagos.jpg" alt="Imagen Superior">
+            <img src="{{ url_for('static', filename='ulagos.jpg') }}" alt="Imagen Superior">
         </a>
     </header>
     <main class="content">
         <h1>Reservar Estacionamiento</h1>
-        <!-- Contenido de la página de reservar estacionamiento -->
+        <div class="reservation-form">
+            <form action="/reservar-estacionamiento" method="post">
+                <label for="nombre">Nombre Completo</label>
+                <input type="text" id="nombre" name="nombre" required>
+
+                <label for="email">Correo Electrónico</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="telefono">Teléfono de Contacto</label>
+                <input type="text" id="telefono" name="telefono" required>
+
+                <label for="fecha">Fecha de Reserva</label>
+                <input type="date" id="fecha" name="fecha" required>
+
+                <label for="hora">Hora de Reserva</label>
+                <input type="time" id="hora" name="hora" required>
+
+                <label for="ubicacion">Ubicación</label>
+                <select id="ubicacion" name="ubicacion" required>
+                    <option value="meyer">Meyer</option>
+                    <option value="campus_chuyaca_osorno">Campus Chuyaca Osorno</option>
+                    <option value="campus_puerto_montt">Campus Puerto Montt</option>
+                </select>
+
+                <label for="tipo_vehiculo">Tipo de Vehículo</label>
+                <select id="tipo_vehiculo" name="tipo_vehiculo" required>
+                    <option value="auto">Automóvil</option>
+                    <option value="moto">Motocicleta</option>
+                    <option value="camioneta">Camioneta</option>
+                    <option value="otros">Otros</option>
+                </select>
+
+                <button type="submit">Reservar</button>
+            </form>
+        </div>
+        <p><a href="/">Volver al Menú Principal</a></p>
     </main>
     <script src="/static/scripts.js"></script>
 </body>
