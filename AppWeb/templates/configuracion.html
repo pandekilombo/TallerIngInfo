@@ -3,8 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configuración - Registro de Estacionamientos</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Configuración</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Estilos adicionales específicos para la página de configuración */
+        .config-form {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .config-form label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .config-form input[type="text"],
+        .config-form input[type="color"],
+        .config-form select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .config-form button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .config-form button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
@@ -12,12 +49,33 @@
             <img src="{{ url_for('static', filename='ulagos.jpg') }}" alt="Imagen Superior">
         </a>
     </header>
-
     <main class="content">
         <h1>Configuración</h1>
-        <!-- Aquí puedes agregar contenido para la configuración -->
-    </main>
+        <div class="config-form">
+            <h2>Apariencia</h2>
+            <form action="/guardar-configuracion" method="post">
+                <label for="color_fondo">Color de Fondo:</label>
+                <input type="color" id="color_fondo" name="color_fondo" value="#ffffff">
 
+                <label for="color_texto">Color de Texto:</label>
+                <input type="color" id="color_texto" name="color_texto" value="#000000">
+
+                <h2>Otros Ajustes</h2>
+                <label for="modo_nocturno">Activar Modo Nocturno:</label>
+                <input type="checkbox" id="modo_nocturno" name="modo_nocturno">
+
+                <label for="notificaciones">Activar Notificaciones:</label>
+                <select id="notificaciones" name="notificaciones">
+                    <option value="si">Sí</option>
+                    <option value="no">No</option>
+                </select>
+
+                <button type="submit">Guardar Configuración</button>
+            </form>
+        </div>
+
+        <p><a href="/">Volver al Menú Principal</a></p>
+    </main>
     <script src="/static/scripts.js"></script>
 </body>
 </html>
