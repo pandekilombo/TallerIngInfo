@@ -5,16 +5,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Estacionamientos</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Estilos adicionales específicos para la página de registro de estacionamientos */
+        .registration-form {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .registration-form label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .registration-form input[type="text"],
+        .registration-form input[type="date"],
+        .registration-form input[type="time"],
+        .registration-form select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .registration-form button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .registration-form button:hover {
+            background-color: #45a049;
+        }
+        .registration-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+        .registration-table th, .registration-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .registration-table th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
     <header class="main-header">
         <a href="/">
-            <img src="/static/ulagos.jpg" alt="Imagen Superior">
+            <img src="{{ url_for('static', filename='ulagos.jpg') }}" alt="Imagen Superior">
         </a>
     </header>
     <main class="content">
         <h1>Registro de Estacionamientos</h1>
-        <!-- Contenido de la página de registro de estacionamientos -->
+        <div class="registration-form">
+            <form action="/registrar-reserva" method="post">
+                <label for="nombre">Nombre del Conductor</label>
+                <input type="text" id="nombre" name="nombre" required>
+
+                <label for="patente">Patente del Vehículo</label>
+                <input type="text" id="patente" name="patente" required>
+
+                <label for="fecha">Fecha de Reserva</label>
+                <input type="date" id="fecha" name="fecha" required>
+
+                <label for="hora">Hora de Reserva</label>
+                <input type="time" id="hora" name="hora" required>
+
+                <label for="ubicacion">Ubicación</label>
+                <select id="ubicacion" name="ubicacion" required>
+                    <option value="Meyer">Campus Meyer</option>
+                    <option value="Chuyaca">Campus Chuyaca Osorno</option>
+                    <option value="PuertoMontt">Campus Puerto Montt</option>
+                </select>
+
+                <button type="submit">Registrar Reserva</button>
+            </form>
+        </div>
+
+        <h2>Historial de Reservas de Estacionamientos</h2>
+        <table class="registration-table">
+            <thead>
+                <tr>
+                    <th>Nombre del Conductor</th>
+                    <th>Patente del Vehículo</th>
+                    <th>Fecha de Reserva</th>
+                    <th>Hora de Reserva</th>
+                    <th>Ubicación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reserva in reservas %}
+                <tr>
+                    <td>{{ reserva.nombre }}</td>
+                    <td>{{ reserva.patente }}</td>
+                    <td>{{ reserva.fecha }}</td>
+                    <td>{{ reserva.hora }}</td>
+                    <td>{{ reserva.ubicacion }}</td>
+                    <td><a href="#">Editar</a> | <a href="#">Eliminar</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <p><a href="/">Volver al Menú Principal</a></p>
     </main>
     <script src="/static/scripts.js"></script>
 </body>
