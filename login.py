@@ -9,7 +9,7 @@ from firebase_admin import firestore
 from google.cloud.firestore_v1.base_query import FieldFilter
 
 from socket import create_connection, gaierror
-
+import socket
 from kivy.uix.screenmanager import ScreenManager
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.dialog import MDDialog
@@ -23,21 +23,70 @@ from kivymd.uix.button import MDIconButton
 from kivymd.uix.button import MDFlatButton
 from kivy.properties import StringProperty, ObjectProperty
 # Initialize Firebase Admin SDK
-cred = credentials.Certificate('serviceAccountKey.json')
-app = firebase_admin.initialize_app(cred)
+db = None
+app = None
+app_initialized = False  # Variable para verificar si la app ya está inicializada
+
+def check_internet_connection():
+    try:
+        # Intenta conectarte a un servidor de Google por su dirección IP
+        socket.create_connection(("8.8.8.8", 53), timeout=5)
+        print("Conexion a internet realizada")
+        return True
+    except OSError:
+        print("No hay conexion a internet")
+    return False
+
+def initialize_firebase():
+    global app, app_initialized
+    if not app_initialized: 
+        cred = credentials.Certificate('serviceAccountKey.json')
+        app = firebase_admin.initialize_app(cred)
+        app_initialized = True
+        print("Firebase inicializado correctamente.")
+    else:
+        print("Firebase ya ha sido inicializado.")
+
+# Verificación de conexión a Internet y luego inicialización de Firebase
+
+def restart_net():
+
+    if check_internet_connection():
+        initialize_firebase()
+        global db
+        db =firestore.client()
+        return True
+    else:
+        print("No hay conexión a Internet. Intenta de nuevo después.")    
+        return False
+
+def close_firebase():
+    global app, db
+    if app:
+        firebase_admin.delete_app(app)
+        print("Firebase cerrado correctamente.")
+        app = None  # Asigna None para indicar que la app ya no está inicializada
+    if db:
+        db.close()
+        print("Firestore cerrado correctamente.")
+        db = None  # Asigna None para indicar que la conexión de Firestore está cerrada
+
+
+#cred = credentials.Certificate('serviceAccountKey.json')
+#app = firebase_admin.initialize_app(cred)
 
 
 # Crea un nuevo documento en Firestore
-db = firestore.client()
+#db = firestore.client()
 
-doc_ref = db.collection("Usuarios").document("Miguel_Contreras1")
-doc_ref2 = db.collection("Usuarios").document("m")
-doc_ref3 = db.collection("Usuarios").document("m-no-admin")
+#doc_ref = db.collection("Usuarios").document("Miguel_Contreras1")
+#doc_ref2 = db.collection("Usuarios").document("m")
+#doc_ref3 = db.collection("Usuarios").document("m-no-admin")
 
 
-doc_ref.set({"Nombre": "Miguel","Apellido1": "Contreras","Apellido2": "Fuentealba", "Contrasena": "1234", "Rol": "Admin"})
-doc_ref2.set({"Nombre": "Miguel","Apellido1": "Contreras","Apellido2": "Fuentealba", "Contrasena": "2", "Rol": "Admin"})
-doc_ref3.set({"Nombre": "Miguel","Apellido1": "Contreras","Apellido2": "Fuentealba", "Contrasena": "2", "Rol": "User"})
+#doc_ref.set({"Nombre": "Miguel","Apellido1": "Contreras","Apellido2": "Fuentealba", "Contrasena": "1234", "Rol": "Admin"})
+#doc_ref2.set({"Nombre": "Miguel","Apellido1": "Contreras","Apellido2": "Fuentealba", "Contrasena": "2", "Rol": "Admin"})
+#doc_ref3.set({"Nombre": "Miguel","Apellido1": "Contreras","Apellido2": "Fuentealba", "Contrasena": "2", "Rol": "User"})
 
 #Productos NO DESCOMENTAR - SE CREAN OBJETOS NUEVOS CON ID DISTINTA SI SE EJECUTAN
 
@@ -466,7 +515,8 @@ class Correcto(BoxLayout):
 class LoginScreen(MDScreen):
     # Pantalla de inicio de sesión
     Admin=False
-
+    def close_dialog(self, *args):
+        self.dialog.dismiss()   
     def checkUser(self, user, password):
         # Comprueba si el usuario y la contraseña son correctos
         if not user or not password:
@@ -496,7 +546,7 @@ class LoginScreen(MDScreen):
           #      keepMeLogged = True
           #  else:
           #      keepMeLogged = False
-            if self.comprobarConexion() == True:
+            if restart_net() == True:
                 print("test")
                 
                 #PROBLEMA
@@ -512,13 +562,23 @@ class LoginScreen(MDScreen):
             self.invalidPopup()
 
 
+
     def invalidPopup(self):
         # Cuadro de diálogo para entradas inválidas
         self.dialog = MDDialog(
                 type="custom",
                 content_cls= InvalidLoginPopup(),
-                size_hint=(.4, .4),
+                size_hint=(.7, .2),
                 auto_dismiss=True,
+                buttons=[
+                    MDFlatButton(
+                        text="Aceptar",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.close_dialog,
+
+                    ),
+                ],
             )
         self.dialog.open()
 
@@ -527,8 +587,16 @@ class LoginScreen(MDScreen):
         self.dialog = MDDialog(
                 type="custom",
                 content_cls= ValidLoginPopup(),
-                size_hint=(.4, .4),
+                size_hint=(.7, .2),
                 auto_dismiss=True,
+                buttons=[
+                    MDFlatButton(
+                        text="Aceptar",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.close_dialog,
+                    ),
+                ],
             )
         self.dialog.open()
 
@@ -537,8 +605,16 @@ class LoginScreen(MDScreen):
         self.dialog = MDDialog(
                 type="custom",
                 content_cls= NoInternetPopup(),
-                size_hint=(.4, .4),
+                size_hint=(.7, .2),
                 auto_dismiss=True,
+                buttons=[
+                    MDFlatButton(
+                        text="Aceptar",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.close_dialog,
+                    ),
+                ],
             )
         self.dialog.open()
 
