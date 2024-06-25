@@ -444,6 +444,7 @@ class Espacio_Reservado(MDScreen):
 
     def Quitar_Reserva2(self,Auto):
         res = db.collection("Reservados").document(str(NewBackup.GiveUserID())).delete()  # delete document
+       # res2 = db.collection("Estacionamientos").document("Meyer").collection("Espacios").document()
         self.dialog.content_cls.ids.reserva_quitar.text=""
         self.close_dialog()
         self.LimpiarDialog()        
