@@ -631,6 +631,16 @@ ScreenManagement:
         id: Auto_Borrar
         hint_text: "ID del Auto"
 
+<Quitar_Reserva>
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "90dp"
+
+    MDTextField:
+        id: reserva_quitar
+        hint_text: "ID del Auto"
+
 
 <Content3>
 
@@ -1079,7 +1089,7 @@ ScreenManagement:
                 MDScreen:
 
                     MDTopAppBar:
-                        title: "Espacio_Reservado"
+                        title: "Reservados"
                         elevation: 4
                         pos_hint: {"top": 1}
                         md_bg_color: app.theme_cls.primary_color

@@ -130,6 +130,10 @@ class NoInternetPopup(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+class Quitar_Reserva(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+    
 class EliminarUsuarioWidget(BoxLayout):
     def __init__(self, nombre_documento, **kwargs):
         super().__init__(**kwargs)
@@ -235,6 +239,7 @@ class set_espacio():
     def give_me(self):
         return self.espacio_a_reservar
 sett=set_espacio()
+
 
 class Reservar_Espacio(MDScreen):
 
@@ -402,21 +407,59 @@ class Reservar_Espacio(MDScreen):
 
 
 class Espacio_Reservado(MDScreen):
-    def agregar(self):
-        res = db.collection("Espacios").document(self.ids.id_prod.text).set({  # insert document
-            'Auto': self.ids.auto.text,
-            'Espacio': self.ids.espacio.text,
-            'Lugar': self.ids.lugar.text,
-                                   
-         
-        })
-        self.ids.id_prod.text = ""
-        self.ids.auto.text = ""
-        self.ids.espacio.text = ""
-        self.ids.nlugar.text = ""
-        print(res)
+    def Cancelar_Reserva(self):
+
+        self.LimpiarDialog()
+        if not self.dialog:
+            self.dialog = MDDialog(
+                title="Cancelar Reserva",
+                type="custom",
+                content_cls=Quitar_Reserva(),
+                buttons=[
+                    MDFlatButton(
+                        text="Cerrar",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.close_dialog,
+                        
+                    ),
+                    MDFlatButton(
+                        text="Ok",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.quitar_auto_from_Reserva,
+                    ),
+                ],
+            )
+        self.dialog.open()       
+
+    def Quitar_Reserva(self):
+        pass
+    def close_dialog(self, *args):
+        self.dialog.dismiss()   
+
+    def LimpiarDialog(self):
+        self.dialog=None
 
 
+    def Quitar_Reserva2(self,Auto):
+        res = db.collection("Reservados").document(str(NewBackup.GiveUserID())).delete()  # delete document
+        self.dialog.content_cls.ids.reserva_quitar.text=""
+        self.close_dialog()
+        self.LimpiarDialog()        
+        print(res)        
+
+
+    def quitar_auto_from_Reserva(self, *args):
+        if self.dialog.content_cls.ids.reserva_quitar.text != "" :
+            Auto = self.dialog.content_cls.ids.reserva_quitar.text
+            self.Quitar_Reserva2(Auto)
+        else: 
+            print("Campo Vacio")
+      
+            self.Error()    
+
+#ELIMINADO, REVISAR DESPUES
 class Espacios_Disponibles(MDScreen):
     def agregar(self):
         res = db.collection("Espacios").document(self.ids.id_prod.text).set({  # insert document
@@ -912,26 +955,26 @@ class MainApp(MDApp):
 
 
                     data.append(("Chuyaca Salud",nombre_documento, Estado, OcupadoPor))               
+                if len(data)>=1:
+                    self.root.get_screen('reservar_esp').ids.container.clear_widgets()
+                    self.root.get_screen('reservar_esp').ids.container.add_widget(MDDataTable(
 
-                self.root.get_screen('reservar_esp').ids.container.clear_widgets()
-                self.root.get_screen('reservar_esp').ids.container.add_widget(MDDataTable(
+                        pos_hint={'center_x': 0.5, 'center_y': 0.5},
+                        size_hint=(1, 1),
+                        check=False,
+                        use_pagination=True,
+                        rows_num=len(data),
+                        column_data=[
+                            ("Campus", dp(20)),
+                            ("Lugar", dp(10)),
+                            ("Estado", dp(12)),                    
+                            ("OcupadoPor", dp(13)),
 
-                    pos_hint={'center_x': 0.5, 'center_y': 0.5},
-                    size_hint=(1, 1),
-                    check=False,
-                    use_pagination=True,
-                    rows_num=len(data),
-                    column_data=[
-                        ("Campus", dp(20)),
-                        ("Lugar", dp(10)),
-                        ("Estado", dp(12)),                    
-                        ("OcupadoPor", dp(13)),
-
-                    
-                    ],  # Definir las columnas
-                    row_data=data  # Pasar los datos recuperados directamente
-                    
-                ))
+                        
+                        ],  # Definir las columnas
+                        row_data=data  # Pasar los datos recuperados directamente
+                        
+                    ))
 
 
 
@@ -964,26 +1007,88 @@ class MainApp(MDApp):
                     data.append((nombre_documento, nombre, apellido1, apellido2, contrasena, rol))
                 
 
+                if len(data)>=1:
+                    self.root.get_screen('adminwindow').ids.container.clear_widgets()
+                    self.root.get_screen('adminwindow').ids.container.add_widget(MDDataTable(
+                        pos_hint={'center_x': 0.5, 'center_y': 0.5},
+                        size_hint=(1, 1),
+                        check=False,
+                        use_pagination=True,
+                        rows_num=len(data),
+                        column_data=[
+                            ("Usuario", dp(40)),
+                            ("Nombre", dp(20)),                    
+                            ("Apellido1", dp(20)),
+                            ("Apellido2", dp(20)),
+                            ("Contraseña", dp(20)),
+                            ("Rol", dp(15))
+                        
+                        ],  # Definir las columnas
+                        row_data=data  # Pasar los datos recuperados directamente
+                        
+                    ))
+                
+            if window == "esp_reservado":
+                docs_ref_Reservas = db.collection("Reservados").document(NewBackup.GiveUserID())
 
-                self.root.get_screen('adminwindow').ids.container.clear_widgets()
-                self.root.get_screen('adminwindow').ids.container.add_widget(MDDataTable(
-                    pos_hint={'center_x': 0.5, 'center_y': 0.5},
-                    size_hint=(1, 1),
-                    check=False,
-                    use_pagination=True,
-                    rows_num=len(data),
-                    column_data=[
-                        ("Usuario", dp(40)),
-                        ("Nombre", dp(20)),                    
-                        ("Apellido1", dp(20)),
-                        ("Apellido2", dp(20)),
-                        ("Contraseña", dp(20)),
-                        ("Rol", dp(15))
-                    
-                    ],  # Definir las columnas
-                    row_data=data  # Pasar los datos recuperados directamente
-                    
-                ))
+             # Recuperar todos los documentos en la colecc
+
+
+                    # Crear una lista para almacenar los datos
+                data = []
+
+                try:
+                    doc_snapshot = docs_ref_Reservas.get()
+                    if doc_snapshot.exists:
+                        datos = doc_snapshot.to_dict()
+                        Auto = datos.get("Auto","")
+                        espacio = datos.get("Espacio","")
+                        Campus= datos.get("Campus","")
+                        data.append((espacio, Campus,Auto)) 
+                        print(data)
+                    else:
+                        print(f"El documento con ID {NewBackup.GiveUserID()} no existe.")
+                except Exception as e:
+                    print(f"Error al obtener datos: {e}")
+
+                 #   nombre_documento = doc.id
+                            #contrasena = user_data.get("Contrasena", "")
+                            #nombre = user_data.get("Nombre", "")
+                            #rol = user_data.get("Rol", "")
+
+
+   
+                print(data)
+
+
+                if len(data)>=1:
+                    self.root.get_screen('esp_reservado').ids.container.clear_widgets()
+                    self.root.get_screen('esp_reservado').ids.container.add_widget(MDDataTable(
+                        pos_hint={'center_x': 0.5, 'center_y': 0.7},
+                        size_hint=(1, 1),
+                        check=False,
+                        use_pagination=True,
+                        rows_num=len(data),
+                        column_data=[
+                
+                            ("Espacio", dp(20)),
+                            ("Campus", dp(20)),
+                            ("Auto", dp(20))
+                            
+                        
+                        ],  # Definir las columnas
+                        row_data=data  # Pasar los datos recuperados directamente
+                        
+                    ))                
+                else:
+                    self.root.get_screen('esp_reservado').ids.container.clear_widgets()
+                    print("No hay autos registrados")
+                
+
+
+
+
+
 
             if window == "vehwindow":
                 
@@ -1039,6 +1144,7 @@ class MainApp(MDApp):
                         
                     ))                
                 else:
+                    self.root.get_screen('vehwindow').ids.container.clear_widgets()
                     print("No hay autos registrados")
                 
 
