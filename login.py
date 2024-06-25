@@ -269,7 +269,8 @@ class Reservar_Espacio(MDScreen):
                     {"text": "Chuyaca - EP", "viewclass": "OneLineListItem", "on_release": lambda x="Chuyaca - EP": self.set_option(x)},
                     {"text": "Chuyaca - Salud", "viewclass": "OneLineListItem", "on_release": lambda x="Chuyaca - Salud": self.set_option(x)},
                     {"text": "Meyer", "viewclass": "OneLineListItem", "on_release": lambda x="Meyer": self.set_option(x)},
-                    
+                    {"text": "Todos", "viewclass": "OneLineListItem", "on_release": lambda x="Todos": self.set_option(x)},
+                                        
                 ],
                 width_mult=0.5,
             )
