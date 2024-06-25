@@ -382,18 +382,6 @@ ScreenManagement:
                         font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
 
                 ListItemWithChip:
-                    text: 'Espacios Disponibles'
-                    size_hint_y: None  # Desactiva el tamaño automático en el eje y
-                    height: dp(48)  # Altura deseada del ListItemWithChip
-                    on_release:
-                        app.switchWindow('esp_disponibles', True)
-                        root.manager.transition.direction = "up"
-                    IconLeftWidget:
-                        icon: 'cog-outline'
-                        theme_text_color: "Custom"
-                        text_color: 1, 1, 1, 1
-                        font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
-                ListItemWithChip:
                     text: 'Mi Espacio Reservado'
                     size_hint_y: None  # Desactiva el tamaño automático en el eje y
                     height: dp(48)  # Altura deseada del ListItemWithChip
@@ -969,12 +957,12 @@ ScreenManagement:
     id: reservar_esp
     
     MDScreen:
-        
+
         MDBoxLayout:
             id: container
-            pos: -.2, -64.5    
+            pos: -.2, -64.5    #no tocar
             orientation: 'vertical'
-            size_hint: 1.14, 1
+            size_hint: 1.12, .9
             pos_hint: {'right': 1.05}
 
         MDNavigationLayout:
@@ -991,6 +979,31 @@ ScreenManagement:
                         text_color: 1, 1, 1, 1
                        # specific_text_color: "#4a4939"
                         left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+                    MDTextField:
+                        id: dropdown_field
+                        hint_text: "Campus"
+                        helper_text_mode: "on_focus"
+                        mode: "rectangle"
+                        icon_right: "arrow-down-drop-circle-outline"
+                        size_hint_x: 0.5
+                        mode: "rectangle"
+                        size_hint_y: None
+                        height: 200 
+                                    
+                        width: 700
+                        font_size: 18
+                        pos_hint: {"center_x": 0.3, "top": 0.87}  # Posiciona el campo de texto en la parte superior
+                        readonly: True
+                        on_focus: root.show_dropdown_menu()          
+                    MDRaisedButton:
+                        text: 'Filtrar'
+                        theme_text_color: 'Custom'
+                        color: (1, 0, 0, 1)
+                        height: 200
+                        width: 200
+                        pos_hint: {"center_x": 0.77, "top": 0.84}  # Posiciona el campo de texto en la parte superior
+                        on_release:
+                            root.Filtrar_Espacios() 
 
             MDNavigationDrawer:
                 id: nav_drawer
