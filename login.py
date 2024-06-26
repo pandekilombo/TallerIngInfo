@@ -240,10 +240,13 @@ class set_espacio():
         return self.espacio_a_reservar
 sett=set_espacio()
 
+class Content_E(BoxLayout):
+    pass
 
 class Reservar_Espacio(MDScreen):
 
-        
+    def LimpiarDialog(self):
+        self.dialog=None        
 
     def agregar(self):
         res = db.collection("Espacios").document(self.ids.id_prod.text).set({  # insert document
@@ -382,7 +385,8 @@ class Reservar_Espacio(MDScreen):
                     #rol = user_data.get("Rol", "")
 
 
-                data.append(("Chuyaca Salud",nombre_documento, Estado, OcupadoPor))               
+                data.append(("Chuyaca Salud",nombre_documento, Estado, OcupadoPor))  
+                       
 
         self.ids.container.clear_widgets()
         self.ids.container.add_widget(MDDataTable(
@@ -401,8 +405,34 @@ class Reservar_Espacio(MDScreen):
                     
             ],  # Definir las columnas
             row_data=data  # Pasar los datos recuperados directamente
-                    
+
+
         ))
+
+    def Reservar_Estacionamiento(self):
+        self.LimpiarDialog()
+        if not self.dialog:
+            self.dialog = MDDialog(
+                title="Reservar Estacionamiento:",
+                type="custom",
+                content_cls=Content_E(),
+                buttons=[
+                    MDFlatButton(
+                        text="Cerrar",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.close_dialog,
+                        
+                    ),
+                    MDFlatButton(
+                        text="Ok",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.close_dialog,
+                    ),
+                ],
+            )
+        self.dialog.open()
  
 
 
@@ -443,8 +473,73 @@ class Espacio_Reservado(MDScreen):
 
 
     def Quitar_Reserva2(self,Auto):
-        res = db.collection("Reservados").document(str(NewBackup.GiveUserID())).delete()  # delete document
+
        # res2 = db.collection("Estacionamientos").document("Meyer").collection("Espacios").document()
+        docs_ref_Meyer = db.collection("Estacionamientos").document("Meyer").collection("Espacios")
+        docs_ref_Chuyaca_AV = db.collection("Estacionamientos").document("Chuyaca - AV").collection("Espacios")
+        docs_ref_Chuyaca_EP = db.collection("Estacionamientos").document("Chuyaca - EP").collection("Espacios")
+        docs_ref_Chuyaca_Salud = db.collection("Estacionamientos").document("Chuyaca - Salud").collection("Espacios")
+        # Recuperar todos los documentos en la colección
+        docs_Meyer = docs_ref_Meyer.stream()
+        docs_Chuyaca_AV = docs_ref_Chuyaca_AV.stream()
+        docs_Chuyaca_EP = docs_ref_Chuyaca_EP.stream()
+        docs_Chuyaca_Salud = docs_ref_Chuyaca_Salud.stream()
+
+
+                # Crear una lista para almacenar los datos
+        data = []
+        
+        query = docs_ref_Meyer.where("OcupadoPor", "==", "BBBB-124")      
+        results_meyer=query.stream()          
+
+                #Lugares - Campus Meyer 
+        for doc in docs_Meyer:
+            estacionamiento_data = doc.to_dict()
+            Estado = estacionamiento_data.get("Estado", "")
+            OcupadoPor = estacionamiento_data.get("OcupadoPor", "")
+            if Estado=="Ocupado" and OcupadoPor==Auto:
+                    doc.reference.update({
+                        "Estado": "Libre",
+                        "OcupadoPor": "Nadie"
+                 })
+
+                #Lugares - Campus Chuyaca EP
+        for doc in docs_Chuyaca_EP:
+            estacionamiento_data = doc.to_dict()
+            Estado = estacionamiento_data.get("Estado", "")
+            OcupadoPor = estacionamiento_data.get("OcupadoPor", "")
+            if Estado=="Ocupado" and OcupadoPor==Auto:
+                doc.reference.Update({
+                    "Estado": "Libre",
+                   "OcupadoPor": "Nadie",
+                })#
+
+
+
+                #Lugares - Campus Chuyaca AV
+        #for doc in docs_Chuyaca_AV:
+        ##    estacionamiento_data = doc.to_dict()
+        #    Estado = estacionamiento_data.get("Estado", "")
+        #    OcupadoPor = estacionamiento_data.get("OcupadoPor", "")
+        #    if Estado=="Ocupado" and OcupadoPor==Auto:
+        #        db.collection("Estacionamientos").document("Chuyaca - AV").collection("Espacios").where("OcupadoPor", "==", Auto).Update({
+        #            "Estado": "Libre",
+        #            "OcupadoPor": "Nadie",
+        #        })
+                #Lugares - Campus Chuyaca Salud
+        #for doc in docs_Chuyaca_Salud:
+        #    estacionamiento_data = doc.to_dict()
+        #    nombre_documento = doc.id
+        #    Estado = estacionamiento_data.get("Estado", "")
+        #    OcupadoPor = estacionamiento_data.get("OcupadoPor", "")
+        #            #contrasena = user_data.get("Contrasena", "")
+        #    if Estado=="Ocupado" and OcupadoPor==Auto:
+        #        db.collection("Estacionamientos").document("Chuyaca - Salud").collection("Espacios").where("OcupadoPor", "==", Auto).Update({
+        ##            "Estado": "Libre",
+         ###           "OcupadoPor": "Nadie",
+   #             })
+###
+        res = db.collection("Reservados").document(str(NewBackup.GiveUserID())).delete()  # delete document
         self.dialog.content_cls.ids.reserva_quitar.text=""
         self.close_dialog()
         self.LimpiarDialog()        

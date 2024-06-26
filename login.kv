@@ -621,6 +621,18 @@ ScreenManagement:
         hint_text: "Patente"
         
 
+
+<Content_E>
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "250dp"
+
+    MDTextField:
+        id: marca
+        hint_text: "Espacio"
+
+
 <Content2>
     orientation: "vertical"
     spacing: "12dp"
@@ -1030,6 +1042,15 @@ ScreenManagement:
                        # text: "Header text"
                         spacing: "4dp"
                         padding: "12dp", 0, 0, "30dp"
+                    
+                    DrawerClickableItem:
+                        icon: "plus"
+                       # right_text: "+99"
+                        text_right_color: "#4a4939"
+                        text: "Reservar Estacionamiento"
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            root.Reservar_Estacionamiento()
 
                     MDNavigationDrawerLabel:
                         text: " "
