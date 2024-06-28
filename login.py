@@ -241,12 +241,60 @@ class set_espacio():
 sett=set_espacio()
 
 class Content_E(BoxLayout):
-    pass
+    def __init__(self, **kwargs):
+        super(Content_E, self).__init__(**kwargs)
+        self.menu = None  # Variable para almacenar el menú desplegable
+    #Necesario para menus desplegables
+    
+    ################################
+    def LimpiarDialog(self):
+        self.dialog=None        
+    
+    def close_dialog(self, *args):
+        self.dialog.dismiss()   
+
+    def set_option(self, text):
+        self.ids.dropdown_field.text = text
+        if self.menu:
+            self.menu.dismiss()
+        
+    ################################
+
+
+
+
+
+
+    def show_dropdown_menu_auto(self):
+        self.menu=""
+        id_user=NewBackup.GiveUserID()
+        autos_items=None
+        #Buscar los autos del usuario
+
+        doc_ref_autos= db.collection("Usuarios").document(id_user).collection("Vehiculos")
+        autos_del_usuario=doc_ref_autos.stream()
+        print("interactuando")
+        data_autos = []
+                
+
+        #Buscar los autos del usuario
+        for doc in autos_del_usuario:
+            nombre_documento = doc.id
+            data_autos.append({"text": nombre_documento, "viewclass": "OneLineListItem", "on_release": lambda x=nombre_documento: self.set_option(x)})
+
+        print(data_autos)
+
+        #Menu desplegable con las patentes de los autos que posee el usuario logeado
+        if not self.menu:
+            self.menu = MDDropdownMenu(
+                caller=self.ids.dropdown_field,
+                items=data_autos,
+                width_mult=0.5,
+            )
+            self.menu.open()
 
 class Reservar_Espacio(MDScreen):
 
-    def LimpiarDialog(self):
-        self.dialog=None        
 
     def agregar(self):
         res = db.collection("Espacios").document(self.ids.id_prod.text).set({  # insert document
@@ -262,7 +310,17 @@ class Reservar_Espacio(MDScreen):
         self.ids.nlugar.text = ""
         print(res)
 
+    def LimpiarDialog(self):
+        self.dialog=None        
+    def close_dialog(self, *args):
+        self.dialog.dismiss()   
 
+    def set_option(self, text):
+        self.ids.dropdown_field.text = text
+        self.menu.dismiss()
+
+        sett.set(text)
+        self.menu=None
 
 
 

@@ -630,7 +630,34 @@ ScreenManagement:
 
     MDTextField:
         id: marca
+        hint_text: "Campus"
+
+
+    MDTextField:
+        id: marca
         hint_text: "Espacio"
+
+
+    MDTextField:
+        id: dropdown_field
+        hint_text: "Autos"
+        helper_text: "Elija auto"
+        helper_text_mode: "on_focus"
+        mode: "rectangle"
+        icon_right: "arrow-down-drop-circle-outline"
+        size_hint_x: 0.8
+        mode: "rectangle"
+        size_hint_y: None
+        height: 200 
+                                    
+        width: 700
+        font_size: 18
+        pos_hint: {"center_x": 0.5, "top": 0.87}  # Posiciona el campo de texto en la parte superior
+        readonly: True
+        on_focus: root.show_dropdown_menu_auto()         
+
+
+
 
 
 <Content2>
@@ -1188,7 +1215,7 @@ ScreenManagement:
 
 
 
-
+#eliminado
 <Espacios_Disponibles>:
     name: 'esp_disponibles'
     id: esp_disponibles
