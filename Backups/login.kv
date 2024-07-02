@@ -1,0 +1,1334 @@
+ScreenManagement:
+
+    LoginScreen:
+    RecoverPasswordScreen:
+    MainWindow:
+    AdminWindow:
+    Anadir_Usuario:
+    Eliminar_Usuario:
+    Vehiculos:
+    Anadir_Vehiculo:
+    Eliminar_Vehiculo:
+    Reservar_Espacio:
+    Espacio_Reservado:
+    Espacios_Disponibles:
+    
+<LoginScreen>:
+    name: 'login'
+    Image:
+        source: 'images/fondo.png'
+        allow_stretch: True
+        keep_ratio: False    
+    MDCard:
+        spacing: 5
+        orientation: 'vertical'
+        size_hint: .8, .8
+        pos_hint: {"center_x": .5, "center_y": .5}
+
+        FitImage:
+            source: 'images/undraw_Login_re_4vu2.png'
+            width: root.width
+            size_hint_y: .4
+        #Mensaje bienvenido
+
+    
+        MDLabel:
+            id: welcome_label
+            text: "Bienvenido"
+            theme_text_color: "Secondary"  # Cambio de color para mejorar la visibilidad
+            font_style: 'H5'  # Cambio de tamaño de fuente para mejorar la visibilidad
+            halign: 'center'
+            size_hint_y: None
+            height: self.texture_size[1]
+            padding_y: 10
+        MDBoxLayout
+            id: form
+            orientation: 'vertical'
+            size_hint_y: .3
+            width: root.width       
+            MDTextField:
+                id: user
+                hint_text: "Usuario"
+                icon_right: "account"  # Cambio de icono para mejorar la visibilidad
+                size_hint_x: None
+                width: 200
+                font_size: 18
+                pos_hint: {"center_x": 0.5}
+
+            MDTextField:
+                id: password
+                hint_text: "Contraseña"
+                icon_right: "eye-off"
+                size_hint_x: None
+                width: 200
+                font_size: 18
+                pos_hint: {"center_x": 0.5}
+                password: True
+        MDBoxLayout:
+            size_hint_y: .15
+            width: root.width
+
+            MDBoxLayout:
+                size_hint_x: .17
+
+            MDBoxLayout:
+                pos_hint: {'y': .40,}
+            #    size_hint: .3, None
+                size_hint: .8, .8
+                MDRaisedButton:
+                    text: 'Iniciar sesión'
+                    theme_text_color: 'Custom'
+                    color: (1, 0, 0, 1)
+
+                    on_release:
+                        app.switchWindow('mainwindow', root.login())
+
+        
+        #Recuperar
+        MDBoxLayout:
+            size_hint_y: .15
+            width: root.width
+
+            MDBoxLayout:
+                #size_hint_x: .12
+                size_hint: .15, .8
+
+                
+            MDBoxLayout:
+                pos_hint: {'y': .5,}
+              #  size_hint: .4, None
+                size_hint: .8, .8
+
+                MDFlatButton:
+                    text: 'Recuperar Cuenta'
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_color
+
+                    on_release:
+                        app.root.current = 'recoverpassword'
+                        root.manager.transition.direction = "left"
+
+
+
+# Pantalla de recuperación de contraseña
+<RecoverPasswordScreen>:
+    name: 'recoverpassword'
+
+    Image:
+        source: 'images/fondo.png'
+        allow_stretch: True
+        keep_ratio: False
+
+    MDCard:
+        orientation: 'vertical'
+        size_hint: .5, .8
+        pos_hint: {"center_x": .5, "center_y": .5}
+
+        FitImage:
+            source: 'images/undraw_Forgot_password_re_hxwm.png'
+            width: root.width
+            size_hint_y: .4
+
+        MDBoxLayout:
+            id: form
+            orientation: 'vertical'
+            size_hint_y: .3
+            width: root.width
+
+            MDTextField:
+                id: user
+                hint_text: "Usuario"
+                icon_right: "account"  # Cambio de icono para mejorar la visibilidad
+                size_hint_x: None
+                width: 200
+                font_size: 18
+                pos_hint: {"center_x": 0.5}            
+
+            MDTextField:
+                id: email
+                hint_text: "Email"
+                icon_right: "email"  # Cambio de icono para mejorar la visibilidad
+                size_hint_x: None
+                width: 200
+                font_size: 18
+                pos_hint: {"center_x": 0.5}
+                
+        MDBoxLayout:
+            size_hint_y: .15
+            width: root.width
+ 
+            MDBoxLayout:
+                size_hint_x: .1
+
+            MDBoxLayout:
+                pos_hint: {'y': .40,}
+                size_hint: .2, None
+
+                MDRaisedButton:
+                    id: sendrequest
+                    text: 'Enviar solicitud'
+                    theme_text_color: 'Custom'
+                    color: (1, 0, 0, 1)
+
+                    on_release:
+                        app.switchWindow('login', root.send())
+                        root.manager.transition.direction = "right"
+
+        MDBoxLayout:
+            size_hint_y: .15
+            width: root.width
+
+            MDBoxLayout:
+                size_hint_x: .12
+
+            MDBoxLayout:
+                pos_hint: {'y': .1,}
+                size_hint: .48, None
+
+                MDLabel:
+                    pos_hint:{'center_x': .3}
+                    text: "¿Ya te acuerdas?"
+                
+            MDBoxLayout:
+                pos_hint: {'y': .5,}
+                size_hint: .4, None
+
+                MDFlatButton:
+                    text: 'Iniciar Sesión'
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_color
+
+                    on_release:
+                        app.root.current = 'login'
+                        root.manager.transition.direction = "right"
+
+
+
+# Ventana invalida de inicio de sesión
+<InvalidLoginPopup>:
+    orientation: 'vertical'
+    spacing: '10dp'
+    size_hint: 1, 1
+    height: "60dp"
+    width: "150dp"
+
+    MDLabel:
+        text: "Nombre de usuario o contraseña incorrectos."
+        font_style: "H6"
+
+    MDLabel:
+        text: 'Ha introducido datos no válidos. Vuelva a intentarlo.'
+        theme_text_color: "Custom"
+        text_color: 1, 0, 0, 1
+
+# Ventana valida de inicio de sesión
+<ValidLoginPopup>:
+    orientation: 'vertical'
+    spacing: '10dp'
+    size_hint: 1, 1
+    height: "60dp"
+    width: "150dp"
+
+    MDLabel:
+        text: "Ha iniciado sesión correctamente."
+        font_style: "H6"
+        halign: 'center'
+        valign: 'middle'
+
+# Ventana de sin conexión a internet
+<NoInternetPopup>:
+    orientation: 'vertical'
+    spacing: '10dp'
+    size_hint: 1, 1
+    height: "60dp"
+    width: "150dp"
+
+    MDLabel:
+        text: "Sin conexión."
+        font_style: "H6"
+        halign: 'center'
+        valign: 'middle'
+
+
+# Pantalla de recuperación de contraseña
+<RecoverPasswordScreen>:
+    name: 'recoverpassword'
+
+    Image:
+        source: 'images/fondo.png'
+        allow_stretch: True
+        keep_ratio: False
+
+    MDCard:
+        orientation: 'vertical'
+        size_hint: .5, .8
+        pos_hint: {"center_x": .5, "center_y": .5}
+
+        FitImage:
+            source: 'images/undraw_Forgot_password_re_hxwm.png'
+            width: root.width
+            size_hint_y: .4
+
+        MDBoxLayout:
+            id: form
+            orientation: 'vertical'
+            size_hint_y: .3
+            width: root.width
+
+            MDTextField:
+                id: user
+                hint_text: "Usuario"
+                icon_right: "account"  # Cambio de icono para mejorar la visibilidad
+                size_hint_x: None
+                width: 200
+                font_size: 18
+                pos_hint: {"center_x": 0.5}            
+
+            MDTextField:
+                id: email
+                hint_text: "Email"
+                icon_right: "email"  # Cambio de icono para mejorar la visibilidad
+                size_hint_x: None
+                width: 200
+                font_size: 18
+                pos_hint: {"center_x": 0.5}
+                
+        MDBoxLayout:
+            size_hint_y: .15
+            width: root.width
+ 
+            MDBoxLayout:
+                size_hint_x: .1
+
+            MDBoxLayout:
+                pos_hint: {'y': .40,}
+                size_hint: .2, None
+
+                MDRaisedButton:
+                    id: sendrequest
+                    text: 'Enviar solicitud'
+                    theme_text_color: 'Custom'
+                    color: (1, 0, 0, 1)
+
+                    on_release:
+                        app.switchWindow('login', root.send())
+                        root.manager.transition.direction = "right"
+
+        MDBoxLayout:
+            size_hint_y: .15
+            width: root.width
+
+            MDBoxLayout:
+                size_hint_x: .12
+
+            MDBoxLayout:
+                pos_hint: {'y': .1,}
+                size_hint: .48, None
+
+                MDLabel:
+                    pos_hint:{'center_x': .3}
+                    text: "¿Ya te acuerdas?"
+                
+            MDBoxLayout:
+                pos_hint: {'y': .5,}
+                size_hint: .4, None
+
+                MDFlatButton:
+                    text: 'Iniciar Sesión'
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_color
+
+                    on_release:
+                        app.root.current = 'login'
+                        root.manager.transition.direction = "right"
+
+<MainWindow>:
+    name: 'mainwindow'
+    id: mainwindow
+    MDScreen:
+    #Barra de arriba
+        MDTopAppBar:
+            title:'Estacionamiento ULAGOS'
+            pos_hint:{'top':1}
+            md_bg_color: app.theme_cls.primary_dark
+        
+
+        MDFloatLayout:
+       #    pos: 0, -20.5
+            size_hint: 1.2, .88
+            md_bg_color: app.theme_cls.primary_color
+            height: root.height    
+            orientation: 'vertical'        
+            MDList:
+                    
+                size_hint_y: None  # Desactiva el tamaño automático en el eje y
+                height: self.minimum_height  # Establece la altura de la lista para que se ajuste automáticamente al contenido
+                pos_hint: {'center_y': 0.5}  # Centra verticalmente la lista de iconos en el layout
+                md_bg_color: app.theme_cls.primary_color            
+
+                ListItemWithChip:
+                    text: 'Reservar Espacio'
+                    size_hint_y: None  # Desactiva el tamaño automático en el eje y
+                    height: dp(48)  # Altura deseada del ListItemWithChip
+  
+                    on_release:
+                        app.switchWindow('reservar_esp', True)
+                        root.manager.transition.direction = "up"
+
+                    IconLeftWidget:
+                        icon: 'checkbox-marked-circle-outline'
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
+
+                ListItemWithChip:
+                    text: 'Mi Espacio Reservado'
+                    size_hint_y: None  # Desactiva el tamaño automático en el eje y
+                    height: dp(48)  # Altura deseada del ListItemWithChip
+                    on_release:
+                        app.switchWindow('esp_reservado', True)
+                        root.manager.transition.direction = "up"
+                    IconLeftWidget:
+                        icon: 'badge-account-horizontal'
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
+    
+                ListItemWithChip:
+                    text: 'Mis Autos Inscritos'
+                    size_hint_y: None  # Desactiva el tamaño automático en el eje y
+                    height: dp(48)  # Altura deseada del ListItemWithChip
+                    on_release:
+                        app.switchWindow('vehwindow', True)
+                        root.manager.transition.direction = "up"
+                    IconLeftWidget:
+                        icon: 'car'
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
+            
+                OneLineListItem:
+                    height: dp(110)  # Altura del espacio
+                    disabled: True  # Deshabilita la interacción
+                    md_bg_color: app.theme_cls.primary_dark
+                ListItemWithChip:
+                    text: 'Cerrar Sesión'
+                    size_hint_y: None  # Desactiva el tamaño automático en el eje y
+                    height: dp(48)  # Altura deseada del ListItemWithChip
+                    on_release:
+                        app.switchWindow('login', True)
+                        app.root.current = 'login'
+                        root.manager.transition.direction = "up"
+                    IconLeftWidget:
+                        icon: 'logout'
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
+       
+
+        
+<AdminWindow>
+    name: 'adminwindow'
+    id: adminwindow
+    MDScreen:
+        MDTopAppBar:
+            title:'Panel Admin'
+            pos_hint:{'top':1}
+            md_bg_color: app.theme_cls.primary_dark
+            
+        MDFloatLayout:
+            pos: 0, -64.5
+            size_hint: .3, 1
+            md_bg_color: app.theme_cls.primary_color
+            height: root.height            
+            MDList:
+                md_bg_color: app.theme_cls.primary_dark     
+                size_hint_y: None  # Desactiva el tamaño automático en el eje y
+                height: self.minimum_height  # Establece la altura de la lista para que se ajuste automáticamente al contenido
+                pos_hint: {'center_y': 0.6}  # Centra verticalmente la lista de iconos en el layout
+                ListItemWithChip:
+                    text: 'Crear o Modificar Usuario'
+                    size_hint_y: None  # Desactiva el tamaño automático en el eje y
+                    height: dp(48)  # Altura deseada del ListItemWithChip
+                    on_release:
+                        app.switchWindow('agregar_user', True)
+                        app.root.current = 'agregar_user'
+                        root.manager.transition.direction = "up"
+                    IconLeftWidget:
+                        icon: 'account-plus'
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
+                ListItemWithChip:
+                    text: 'Eliminar Usuario'
+                    size_hint_y: None  # Desactiva el tamaño automático en el eje y
+                    height: dp(48)  # Altura deseada del ListItemWithChip
+                    on_release:
+                        app.switchWindow('eliminar_user', True)
+                        app.root.current = 'eliminar_user'
+                        root.manager.transition.direction = "up"
+                    IconLeftWidget:
+                        icon: 'account-remove'
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
+           
+                ListItemWithChip:
+                    text: 'Volver'
+                    size_hint_y: None  # Desactiva el tamaño automático en el eje y
+                    height: dp(48)  # Altura deseada del ListItemWithChip
+                    on_release:
+                        app.switchWindow('mainwindow', True)
+                        app.root.current = 'mainwindow'
+                        root.manager.transition.direction = "up"
+                    IconLeftWidget:
+                        icon: 'logout'
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
+        MDBoxLayout:
+            id: container
+            pos: 0, -64.5    
+            orientation: 'vertical'
+            size_hint: 0.7, 1
+            pos_hint: {'right': 1}
+
+
+<Vehiculos>
+    name: 'vehwindow'
+    id: vehwindow
+
+    MDScreen:
+        
+        MDBoxLayout:
+            id: container
+            pos: -.2, -64.5    
+            orientation: 'vertical'
+            size_hint: 1.14, 1
+            pos_hint: {'right': 1.05}
+
+        MDNavigationLayout:
+
+            MDScreenManager:
+
+                MDScreen:
+
+                    MDTopAppBar:
+                        title: "Mis Autos Inscritos"
+                        elevation: 4
+                        pos_hint: {"top": 1}
+                        md_bg_color: app.theme_cls.primary_color
+                        text_color: 1, 1, 1, 1
+                       # specific_text_color: "#4a4939"
+                        left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+
+            MDNavigationDrawer:
+                id: nav_drawer
+                radius: (0, 16, 16, 0)
+                pos: -.5,1
+                size_hint: 1, 1
+               # pos_hint: {'left': 1.2}
+                MDNavigationDrawerMenu:
+
+                    MDNavigationDrawerHeader:
+                        title: "Menu"
+                        title_color: app.theme_cls.primary_color
+
+                       # text: "Header text"
+                        spacing: "4dp"
+                        padding: "12dp", 0, 0, "30dp"
+
+                    MDNavigationDrawerLabel:
+                        text: "Autos"
+
+                    DrawerClickableItem:
+                        icon: "plus"
+                       # right_text: "+99"
+                        text_right_color: "#4a4939"
+                        text: "Añadir Auto"
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            root.Añadir_Vehiculo()
+
+                    DrawerClickableItem:
+                        icon: "pencil-plus"
+                        text: "Modificar Auto"
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            root.Actualizar_Auto()                          
+
+                    DrawerClickableItem:
+                        icon: "minus-thick"
+                        text: "Quitar Auto"
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            root.Quitar_Auto()                        
+                    MDNavigationDrawerDivider:
+
+                    DrawerClickableItem:
+                        icon: "arrow-left"
+                        text: "Volver"
+                      
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            app.root.current = 'mainwindow'
+                            root.manager.transition.direction = "right"
+
+                    
+                    MDNavigationDrawerDivider:
+
+                    MDNavigationDrawerLabel:
+                        text: "Salir"
+
+                  #  DrawerLabelItem:
+                   #     icon: "information-outline"
+                    #    text: "Label"
+
+                    DrawerClickableItem:
+                        icon: "logout"
+                       # right_text: "+99"
+                        text_right_color: "#4a4939"
+                        text: "Cerrar Sesión"
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            app.switchWindow('login', True)
+                            app.root.current = 'login'
+                            root.manager.transition.direction = "up"       
+<Content>
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "250dp"
+
+    MDTextField:
+        id: marca
+        hint_text: "Marca"
+
+    MDTextField:
+        id: modelo
+        hint_text: "Modelo"
+
+ 
+    MDTextField:
+        id: anio
+        hint_text: "Año"
+        
+                        
+
+
+    MDTextField:
+        id: patente
+        hint_text: "Patente"
+        
+
+
+<Content_E>
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "250dp"
+
+    MDTextField:
+        id: marca
+        hint_text: "Campus"
+
+
+    MDTextField:
+        id: marca
+        hint_text: "Espacio"
+
+
+    MDTextField:
+        id: dropdown_field
+        hint_text: "Autos"
+        helper_text: "Elija auto"
+        helper_text_mode: "on_focus"
+        mode: "rectangle"
+        icon_right: "arrow-down-drop-circle-outline"
+        size_hint_x: 0.8
+        mode: "rectangle"
+        size_hint_y: None
+        height: 200 
+                                    
+        width: 700
+        font_size: 18
+        pos_hint: {"center_x": 0.5, "top": 0.87}  # Posiciona el campo de texto en la parte superior
+        readonly: True
+        on_focus: root.show_dropdown_menu_auto()         
+
+
+
+
+
+<Content2>
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "90dp"
+
+    MDTextField:
+        id: Auto_Borrar
+        hint_text: "ID del Auto"
+
+<Quitar_Reserva>
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "90dp"
+
+    MDTextField:
+        id: reserva_quitar
+        hint_text: "ID del Auto"
+
+
+<Content3>
+
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "300dp"
+
+    MDTextField:
+        id: patente
+        hint_text: "Patente"
+
+    MDTextField:
+        id: marca
+        hint_text: "Marca"
+
+    MDTextField:
+        id: modelo
+        hint_text: "Modelo"
+
+ 
+    MDTextField:
+        id: anio
+        hint_text: "Año"
+        
+                        
+
+<ErrorCampoVacio>
+
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "30dp"
+
+        
+
+<Correcto>
+
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "30dp"
+
+
+<Anadir_Usuario>
+    name: 'agregar_user'
+    id: agregar_user
+    MDScreen:
+        MDTopAppBar:
+            title:'Añadir Usuario'
+            pos_hint:{'top':1}
+            md_bg_color: app.theme_cls.primary_dark
+            
+        MDFloatLayout:
+            pos: 0, -64.5
+            size_hint: .3, 1
+            md_bg_color: app.theme_cls.primary_color
+            height: root.height            
+            MDList:
+                md_bg_color: app.theme_cls.primary_dark     
+                size_hint_y: None  # Desactiva el tamaño automático en el eje y
+                height: self.minimum_height  # Establece la altura de la lista para que se ajuste automáticamente al contenido
+                pos_hint: {'center_y': 0.6}  # Centra verticalmente la lista de iconos en el layout
+                ListItemWithChip:
+                    text: 'Volver'
+                    size_hint_y: None  # Desactiva el tamaño automático en el eje y
+                    height: dp(48)  # Altura deseada del ListItemWithChip
+                    on_release:
+                        app.switchWindow('adminwindow', True)
+                        app.root.current = 'adminwindow'
+                        root.manager.transition.direction = "up"
+                    IconLeftWidget:
+                        icon: 'logout'
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
+        MDBoxLayout:
+            id: agregar_user_box
+            pos: 0, -64.5    
+            orientation: 'vertical'
+            size_hint: 0.7, 0.9
+            pos_hint: {'right': 1}
+         #   md_bg_color: app.theme_cls.primary_dark
+           
+            MDTextField:
+                id: usuario
+                hint_text: "Usuario"
+                icon_right: "cuenta"
+                size_hint_x: 0.5
+                size_hint_y: None               
+                width: 200
+                height: 200
+                font_size: 18
+                pos_hint: {"center_x": 0.5}
+
+            MDTextField:
+                id: nombre
+                hint_text: "Nombre"
+                icon_right: "nombre"
+                size_hint_x: 0.5
+                size_hint_y: None                
+                width: 200
+                height: 200
+                font_size: 18
+                pos_hint: {"center_x": 0.5}
+
+            MDTextField:
+                id: apellido_p
+                hint_text: "Apellido Paterno"
+                icon_right: "apellidos"
+                size_hint_x: 0.5
+                width: 200
+                font_size: 18
+                size_hint_y: None
+                height: 200                          
+                pos_hint: {"center_x": 0.5}
+            MDTextField:
+                id: apellido_m
+                hint_text: "Apellido Materno"
+                icon_right: "apellidos"
+                size_hint_x: 0.5
+                width: 200
+                font_size: 18
+                size_hint_y: None
+                height: 200                          
+                pos_hint: {"center_x": 0.5}
+            MDTextField:
+                id: rol
+                hint_text: "Rol"
+                icon_right: "security"
+                size_hint_x: 0.5
+                size_hint_y: None
+                height: 200                          
+                width: 200
+                font_size: 18
+                pos_hint: {"center_x": 0.5}
+               
+            MDTextField:
+                id: password
+                hint_text: "password"
+                icon_right: "eye-off"
+                size_hint_x: 0.5
+                size_hint_y: None
+                height: 200                          
+                width: 200
+                font_size: 18
+                pos_hint: {"center_x": 0.5}
+                password: True
+            MDRoundFlatButton:
+                text: "Agregar - Editar"
+                font_size: 12
+                pos_hint: {"center_x": 0.5}
+                size_hint_y: None          
+
+                height: 200                          
+                width: 200
+                on_press: root.agregar()
+            MDBoxLayout:
+            #   md_bg_color: app.theme_cls.primary_dark            
+             #   text: "Fix"
+                font_size: 12
+                pos_hint: {"center_x": 0.5}
+                size_hint_y: 1          
+                height: 200                          
+                width: 200
+
+
+
+
+
+<Eliminar_Usuario>
+    name: 'eliminar_user'
+    id: eliminar_user
+    MDScreen:
+        MDTopAppBar:
+            title:'Eliminar Usuario'
+            pos_hint:{'top':1}
+            md_bg_color: app.theme_cls.primary_dark
+            
+        MDFloatLayout:
+            pos: 0, -64.5
+            size_hint: .3, 1
+            md_bg_color: app.theme_cls.primary_color
+            height: root.height            
+            MDList:
+                md_bg_color: app.theme_cls.primary_dark     
+                size_hint_y: None  # Desactiva el tamaño automático en el eje y
+                height: self.minimum_height  # Establece la altura de la lista para que se ajuste automáticamente al contenido
+                pos_hint: {'center_y': 0.6}  # Centra verticalmente la lista de iconos en el layout
+                ListItemWithChip:
+                    text: 'Volver'
+                    size_hint_y: None  # Desactiva el tamaño automático en el eje y
+                    height: dp(48)  # Altura deseada del ListItemWithChip
+                    on_release:
+                        app.switchWindow('adminwindow', True)
+                        app.root.current = 'adminwindow'
+                        root.manager.transition.direction = "up"
+                    IconLeftWidget:
+                        icon: 'logout'
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
+        MDBoxLayout:
+            id: agregar_user_box
+            pos: 0, -64.5    
+            orientation: 'vertical'
+            size_hint: 0.7, 0.9
+            pos_hint: {'right': 1}
+         #   md_bg_color: app.theme_cls.primary_dark
+           
+            MDTextField:
+                id: usuario
+                hint_text: "Usuario"
+                icon_right: "cuenta"
+                size_hint_x: 0.5
+                size_hint_y: None               
+                width: 200
+                height: 200
+                font_size: 18
+                pos_hint: {"center_x": 0.5}
+
+            MDRoundFlatButton:
+                text: "Eliminar"
+                font_size: 12
+                pos_hint: {"center_x": 0.5}
+                size_hint_y: None          
+
+                height: 200                          
+                width: 200
+                on_press: root.eliminar()
+            MDBoxLayout:
+            #   md_bg_color: app.theme_cls.primary_dark            
+             #   text: "Fix"
+                font_size: 12
+                pos_hint: {"center_x": 0.5}
+                size_hint_y: 1          
+                height: 200                          
+                width: 200
+
+
+                    
+
+                        
+
+                       
+
+
+
+
+
+<Eliminar_Vehiculo>
+    name: 'eliminar_veh'
+    id: eliminar_veh
+    MDScreen:
+        MDTopAppBar:
+            title:'Eliminar Vehiculo'
+            pos_hint:{'top':1}
+            md_bg_color: app.theme_cls.primary_dark
+            
+        MDFloatLayout:
+            pos: 0, -64.5
+            size_hint: .3, 1
+            md_bg_color: app.theme_cls.primary_color
+            height: root.height            
+            MDList:
+                md_bg_color: app.theme_cls.primary_dark     
+                size_hint_y: None  # Desactiva el tamaño automático en el eje y
+                height: self.minimum_height  # Establece la altura de la lista para que se ajuste automáticamente al contenido
+                pos_hint: {'center_y': 0.6}  # Centra verticalmente la lista de iconos en el layout
+                ListItemWithChip:
+                    text: 'Volver'
+                    size_hint_y: None  # Desactiva el tamaño automático en el eje y
+                    height: dp(48)  # Altura deseada del ListItemWithChip
+                    on_release:
+                        app.switchWindow('vehwindow', True)
+                        app.root.current = 'vehwindow'
+                        root.manager.transition.direction = "up"
+                    IconLeftWidget:
+                        icon: 'logout'
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1
+                        font_size: self.parent.height * 0.4  # Ajusta dinámicamente el tamaño de la fuente en función de la altura del padre
+        MDBoxLayout:
+            id: agregar_user_box
+            pos: 0, -64.5    
+            orientation: 'vertical'
+            size_hint: 0.7, 0.9
+            pos_hint: {'right': 1}
+         #   md_bg_color: app.theme_cls.primary_dark
+           
+            MDTextField:
+                id: id_prod
+                hint_text: "Patente de Vehiculo"
+                icon_right: "cuenta"
+                size_hint_x: 0.5
+                size_hint_y: None               
+                width: 200
+                height: 200
+                font_size: 18
+                pos_hint: {"center_x": 0.5}
+
+            MDRoundFlatButton:
+                text: "Eliminar"
+                font_size: 12
+                pos_hint: {"center_x": 0.5}
+                size_hint_y: None          
+
+                height: 200                          
+                width: 200
+                on_press: root.eliminar()
+            MDBoxLayout:
+            #   md_bg_color: app.theme_cls.primary_dark            
+             #   text: "Fix"
+                font_size: 12
+                pos_hint: {"center_x": 0.5}
+                size_hint_y: 1          
+                height: 200                          
+                width: 200
+
+
+                    
+<Reservar_Espacio>
+    name: 'reservar_esp'
+    id: reservar_esp
+    
+    MDScreen:
+
+        MDBoxLayout:
+            id: container
+            pos: -.2, -64.5    #no tocar
+            orientation: 'vertical'
+            size_hint: 1.12, .9
+            pos_hint: {'right': 1.05}
+
+        MDNavigationLayout:
+
+            MDScreenManager:
+
+                MDScreen:
+
+                    MDTopAppBar:
+                        title: "Reservar Espacio"
+                        elevation: 4
+                        pos_hint: {"top": 1}
+                        md_bg_color: app.theme_cls.primary_color
+                        text_color: 1, 1, 1, 1
+                       # specific_text_color: "#4a4939"
+                        left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+                    MDTextField:
+                        id: dropdown_field
+                        hint_text: "Campus"
+                        helper_text_mode: "on_focus"
+                        mode: "rectangle"
+                        icon_right: "arrow-down-drop-circle-outline"
+                        size_hint_x: 0.5
+                        mode: "rectangle"
+                        size_hint_y: None
+                        height: 200 
+                                    
+                        width: 700
+                        font_size: 18
+                        pos_hint: {"center_x": 0.3, "top": 0.87}  # Posiciona el campo de texto en la parte superior
+                        readonly: True
+                        on_focus: root.show_dropdown_menu()          
+                    MDRaisedButton:
+                        text: 'Filtrar'
+                        theme_text_color: 'Custom'
+                        color: (1, 0, 0, 1)
+                        height: 200
+                        width: 200
+                        pos_hint: {"center_x": 0.77, "top": 0.84}  # Posiciona el campo de texto en la parte superior
+                        on_release:
+                            root.Filtrar_Espacios() 
+
+            MDNavigationDrawer:
+                id: nav_drawer
+                radius: (0, 16, 16, 0)
+                pos: -.5,1
+                size_hint: 1, 1
+               # pos_hint: {'left': 1.2}
+                MDNavigationDrawerMenu:
+
+                    MDNavigationDrawerHeader:
+                        title: "Menu"
+                        title_color: app.theme_cls.primary_color
+
+                       # text: "Header text"
+                        spacing: "4dp"
+                        padding: "12dp", 0, 0, "30dp"
+                    
+                    DrawerClickableItem:
+                        icon: "plus"
+                       # right_text: "+99"
+                        text_right_color: "#4a4939"
+                        text: "Reservar Estacionamiento"
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            root.Reservar_Estacionamiento()
+
+                    MDNavigationDrawerLabel:
+                        text: " "
+
+
+                    DrawerClickableItem:
+                        icon: "arrow-left"
+                        text: "Volver"
+                      
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            app.root.current = 'mainwindow'
+                            root.manager.transition.direction = "right"
+
+                    
+                    MDNavigationDrawerDivider:
+
+                    MDNavigationDrawerLabel:
+                        text: "Salir"
+
+                  #  DrawerLabelItem:
+                   #     icon: "information-outline"
+                    #    text: "Label"
+
+                    DrawerClickableItem:
+                        icon: "logout"
+                       # right_text: "+99"
+                        text_right_color: "#4a4939"
+                        text: "Cerrar Sesión"
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            app.switchWindow('login', True)
+                            app.root.current = 'login'
+                            root.manager.transition.direction = "up"  
+
+
+
+
+
+<Espacio_Reservado>:
+    name: 'esp_reservado'
+    id: esp_reservado
+    
+    MDScreen:
+        
+        MDBoxLayout:
+            id: container
+            pos: -.2, -64.5    
+            orientation: 'vertical'
+            size_hint: 1.14, 1
+            pos_hint: {'right': 1.05}
+
+        MDNavigationLayout:
+
+            MDScreenManager:
+
+                MDScreen:
+
+                    MDTopAppBar:
+                        title: "Reservados"
+                        elevation: 4
+                        pos_hint: {"top": 1}
+                        md_bg_color: app.theme_cls.primary_color
+                        text_color: 1, 1, 1, 1
+                       # specific_text_color: "#4a4939"
+                        left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+
+            MDNavigationDrawer:
+                id: nav_drawer
+                radius: (0, 16, 16, 0)
+                pos: -.5,1
+                size_hint: 1, 1
+               # pos_hint: {'left': 1.2}
+                MDNavigationDrawerMenu:
+
+                    MDNavigationDrawerHeader:
+                        title: "Menu"
+                        title_color: app.theme_cls.primary_color
+
+                       # text: "Header text"
+                        spacing: "4dp"
+                        padding: "12dp", 0, 0, "30dp"
+
+                    MDNavigationDrawerLabel:
+                        text: " "
+
+
+                    DrawerClickableItem:
+                        icon: "pencil-plus"
+                        text: "Modificar Reserva"
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            root.Actualizar_Reserva()                          
+
+                    DrawerClickableItem:
+                        icon: "minus-thick"
+                        text: "Cancelar Reserva"
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            root.Cancelar_Reserva()                        
+                    MDNavigationDrawerDivider:
+
+                    DrawerClickableItem:
+                        icon: "arrow-left"
+                        text: "Volver"
+                      
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            app.root.current = 'mainwindow'
+                            root.manager.transition.direction = "right"
+
+                    
+                    MDNavigationDrawerDivider:
+
+                    MDNavigationDrawerLabel:
+                        text: "Salir"
+
+                  #  DrawerLabelItem:
+                   #     icon: "information-outline"
+                    #    text: "Label"
+
+                    DrawerClickableItem:
+                        icon: "logout"
+                       # right_text: "+99"
+                        text_right_color: "#4a4939"
+                        text: "Cerrar Sesión"
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            app.switchWindow('login', True)
+                            app.root.current = 'login'
+                            root.manager.transition.direction = "up"  
+           
+            
+
+
+
+
+#eliminado
+<Espacios_Disponibles>:
+    name: 'esp_disponibles'
+    id: esp_disponibles
+    
+    MDScreen:
+        
+        MDBoxLayout:
+            id: container
+            pos: -.2, -64.5    
+            orientation: 'vertical'
+            size_hint: 1.14, 1
+            pos_hint: {'right': 1.05}
+
+        MDNavigationLayout:
+
+            MDScreenManager:
+
+                MDScreen:
+
+                    MDTopAppBar:
+                        title: "Espacios Disponibles"
+                        elevation: 4
+                        pos_hint: {"top": 1}
+                        md_bg_color: app.theme_cls.primary_color
+                        text_color: 1, 1, 1, 1
+                       # specific_text_color: "#4a4939"
+                        left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+
+            MDNavigationDrawer:
+                id: nav_drawer
+                radius: (0, 16, 16, 0)
+                pos: -.5,1
+                size_hint: 1, 1
+               # pos_hint: {'left': 1.2}
+                MDNavigationDrawerMenu:
+
+                    MDNavigationDrawerHeader:
+                        title: "Menu"
+                        title_color: app.theme_cls.primary_color
+
+                       # text: "Header text"
+                        spacing: "4dp"
+                        padding: "12dp", 0, 0, "30dp"
+
+                    MDNavigationDrawerLabel:
+                        text: " "
+
+
+                    DrawerClickableItem:
+                        icon: "arrow-left"
+                        text: "Volver"
+                      
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            app.root.current = 'mainwindow'
+                            root.manager.transition.direction = "right"
+
+                    
+                    MDNavigationDrawerDivider:
+
+                    MDNavigationDrawerLabel:
+                        text: "Salir"
+
+                  #  DrawerLabelItem:
+                   #     icon: "information-outline"
+                    #    text: "Label"
+
+                    DrawerClickableItem:
+                        icon: "logout"
+                       # right_text: "+99"
+                        text_right_color: "#4a4939"
+                        text: "Cerrar Sesión"
+                        on_release:
+                            nav_drawer.set_state("close")  # Cierra la barra lateral
+                            app.switchWindow('login', True)
+                            app.root.current = 'login'
+                            root.manager.transition.direction = "up"  
+
+#Test
+
+<DrawerClickableItem@MDNavigationDrawerItem>
+    focus_color: "#e7e4c0"
+    text_color: "#4a4939"
+    icon_color: "#4a4939"
+    ripple_color: "#c5bdd2"
+    selected_color: "#0c6c4d"
+
+
+<DrawerLabelItem@MDNavigationDrawerItem>
+    text_color: "#4a4939"
+    icon_color: "#4a4939"
+    focus_behavior: False
+    selected_color: "#4a4939"
+    _no_ripple_effect: True
+            
+
+
+                        
+
+
+#Test
+
+<DrawerClickableItem@MDNavigationDrawerItem>
+    focus_color: "#e7e4c0"
+    text_color: "#4a4939"
+    icon_color: "#4a4939"
+    ripple_color: "#c5bdd2"
+    selected_color: "#0c6c4d"
+
+
+<DrawerLabelItem@MDNavigationDrawerItem>
+    text_color: "#4a4939"
+    icon_color: "#4a4939"
+    focus_behavior: False
+    selected_color: "#4a4939"
+    _no_ripple_effect: True
