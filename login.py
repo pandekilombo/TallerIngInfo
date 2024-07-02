@@ -257,12 +257,88 @@ class Content_E(BoxLayout):
         self.ids.dropdown_field.text = text
         if self.menu:
             self.menu.dismiss()
-        
+
+    def set_option_estacionamiento(self, text):
+        self.ids.id_campus.text = text
+        if self.menu:
+            self.menu.dismiss()      
+
+
+
+    def set_option_not_campus(self, text):
+        self.ids.espacio.text = text
+        if self.menu:
+            self.menu.dismiss()     
     ################################
 
+    def show_dropdown_menu_espacio(self):
+        self.menu=""
+        id_user=NewBackup.GiveUserID()
+        autos_items=None
+        #Buscar los autos del usuario
+
+
+        if self.ids.id_campus.text != "" :
+
+
+            doc_ref_estacionamientos= db.collection("Estacionamientos").document(self.ids.id_campus.text).collection("Espacios")
+            estacionamientos=doc_ref_estacionamientos.stream()
+
+            print("interactuando")
+
+            data_estacionamientos = []
+                    
+
+            #Buscar los autos del usuario
+            for doc in estacionamientos:
+                nombre_documento = doc.id
+                data_estacionamientos.append({"text": nombre_documento, "viewclass": "OneLineListItem", "on_release": lambda x=nombre_documento: self.set_option_not_campus(x)})
+
+        
+
+            #Menu desplegable con las patentes de los autos que posee el usuario logeado
+            if not self.menu:
+                self.menu = MDDropdownMenu(
+                    caller=self.ids.espacio,
+                    items=data_estacionamientos,
+                    width_mult=0.5,
+                )
+                self.menu.open()
+
+        else:
+            print("Campus esta vacio")
 
 
 
+    def show_dropdown_menu_campus(self):
+        self.menu=""
+        id_user=NewBackup.GiveUserID()
+        autos_items=None
+        #Buscar los autos del usuario
+
+        doc_ref_estacionamientos= db.collection("Estacionamientos")
+        estacionamientos=doc_ref_estacionamientos.stream()
+
+        print("interactuando")
+
+        data_estacionamientos = []
+                
+
+        #Buscar los autos del usuario
+        for doc in estacionamientos:
+            nombre_documento = doc.id
+            data_estacionamientos.append({"text": nombre_documento, "viewclass": "OneLineListItem", "on_release": lambda x=nombre_documento: self.set_option_estacionamiento(x)})
+
+       
+
+        #Menu desplegable con las patentes de los autos que posee el usuario logeado
+        if not self.menu:
+            self.menu = MDDropdownMenu(
+                caller=self.ids.id_campus,
+                items=data_estacionamientos,
+                width_mult=0.5,
+            )
+            self.menu.open()
 
 
     def show_dropdown_menu_auto(self):
