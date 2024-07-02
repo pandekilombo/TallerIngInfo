@@ -680,8 +680,17 @@ ScreenManagement:
         font_size: 18
         pos_hint: {"center_x": 0.5, "top": 0.87}  # Posiciona el campo de texto en la parte superior
         readonly: True
-        on_focus: root.show_dropdown_menu_auto()         
+        on_focus: root.show_dropdown_menu_auto()  
 
+    MDRoundFlatButton:
+        text: "Reservar"
+        font_size: 12
+        pos_hint: {"center_x": 0.5}
+        size_hint_y: None          
+
+        height: 200                          
+        width: 200
+        on_press: root.agregar_reservar()
 
 #show_dropdown_menu_campus
 

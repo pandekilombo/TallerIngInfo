@@ -244,12 +244,20 @@ class Content_E(BoxLayout):
     def __init__(self, **kwargs):
         super(Content_E, self).__init__(**kwargs)
         self.menu = None  # Variable para almacenar el menú desplegable
+        self.LimpiarCeldas()
     #Necesario para menus desplegables
     
     ################################
     def LimpiarDialog(self):
         self.dialog=None        
-    
+
+
+    def LimpiarCeldas(self):
+        self.ids.id_campus.text=""
+        self.ids.espacio.text=""
+        self.ids.dropdown_field.text=""
+
+
     def close_dialog(self, *args):
         self.dialog.dismiss()   
 
@@ -260,6 +268,7 @@ class Content_E(BoxLayout):
 
     def set_option_estacionamiento(self, text):
         self.ids.id_campus.text = text
+        self.ids.espacio.text = ""
         if self.menu:
             self.menu.dismiss()      
 
@@ -308,6 +317,49 @@ class Content_E(BoxLayout):
         else:
             print("Campus esta vacio")
 
+    def agregar_reservar(self):
+        #hay que modificar el estado del espacio en la base de datos del campus y despues agregar la reserva a la id del susuario
+        print("")
+
+        doc_ref_reservar = db.collection("Estacionamientos").document(self.ids.id_campus.text).collection("Espacios").document(self.ids.espacio.text)
+        doc_ref_crear_reserva=db.collection("Reservados").document(NewBackup.GiveUserID())
+
+        reservar_get= doc_ref_reservar.get()
+        crear_reserva_get= doc_ref_crear_reserva.get()
+        
+        #Si se valida que el documento del espacio existe entonces pasa a verificar si existe una reserva ya
+        if reservar_get.exists:
+
+
+            #Comprobar si el espacio esta ocupado
+            estado_espacio= reservar_get.to_dict().get("Estado")
+            ocupado_por=reservar_get.to_dict().get("OcupadoPor")
+            if estado_espacio == "Libre":
+    
+                #Comprobar si ya hay una reserva en este usuario:
+                if not crear_reserva_get.exists:
+                    
+                    doc_ref_reservar.update({
+                        "Estado": "Ocupado",
+                        "OcupadoPor": self.ids.dropdown_field.text
+
+                    })
+
+                    doc_ref_crear_reserva.set({
+                        "Auto": self.ids.dropdown_field.text,
+                        "Campus": self.ids.id_campus.text,
+                        "Lugar": self.ids.espacio.text
+
+
+                    })
+
+                    self.LimpiarCeldas()
+                else:
+                    print("El usuario "+NewBackup.GiveUserID()+" ya tiene una reserva")
+            else:
+                print("El espacio "+self.ids.espacio.text+" en el sector "+self.ids.id_campus.text+" esta ocupado por "+ocupado_por)
+        else:
+            print("Error: el documento "+self.ids.espacio.text+" no existe")
 
 
     def show_dropdown_menu_campus(self):
@@ -561,12 +613,7 @@ class Reservar_Espacio(MDScreen):
                         on_release=self.close_dialog,
                         
                     ),
-                    MDFlatButton(
-                        text="Ok",
-                        theme_text_color="Custom",
-                        text_color=self.theme_cls.primary_color,
-                        on_release=self.close_dialog,
-                    ),
+
                 ],
             )
         self.dialog.open()
