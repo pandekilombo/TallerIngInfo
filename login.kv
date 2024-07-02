@@ -781,15 +781,73 @@ ScreenManagement:
         id: Auto_Borrar
         hint_text: "ID del Auto"
 
-<Quitar_Reserva>
+<Content_Reserva>
+
     orientation: "vertical"
     spacing: "12dp"
     size_hint_y: None
-    height: "90dp"
+    height: "250dp"
 
     MDTextField:
-        id: reserva_quitar
-        hint_text: "ID del Auto"
+        id: del_campus
+        hint_text: "Campus"
+
+     
+        mode: "rectangle"
+        #icon_right: "arrow-down-drop-circle-outline"
+        size_hint_x: 0.8
+        mode: "rectangle"
+        size_hint_y: None
+        height: 200 
+                                    
+        width: 700
+        font_size: 18
+        pos_hint: {"center_x": 0.5, "top": 0.87}  # Posiciona el campo de texto en la parte superior
+        readonly: True
+
+    MDTextField:
+        id: del_espacio
+        hint_text: "Espacio"
+
+
+        mode: "rectangle"
+        #icon_right: "arrow-down-drop-circle-outline"
+        size_hint_x: 0.8
+        mode: "rectangle"
+        size_hint_y: None
+        height: 200 
+                                    
+        width: 700
+        font_size: 18
+        pos_hint: {"center_x": 0.5, "top": 0.87}  # Posiciona el campo de texto en la parte superior
+        readonly: True
+
+    MDTextField:
+        id: dropdown_field
+        hint_text: "Auto"
+
+        mode: "rectangle"
+        #icon_right: "arrow-down-drop-circle-outline"
+        size_hint_x: 0.8
+        mode: "rectangle"
+        size_hint_y: None
+        height: 200 
+                                    
+        width: 700
+        font_size: 18
+        pos_hint: {"center_x": 0.5, "top": 0.87}  # Posiciona el campo de texto en la parte superior
+        readonly: True
+
+    MDRoundFlatButton:
+        text: "Cancelar reserva"
+        font_size: 12
+        pos_hint: {"center_x": 0.5}
+        size_hint_y: None          
+
+        height: 200                          
+        width: 200
+        on_press: root.Cancelar_Reserva()
+
 
 
 <Content3>

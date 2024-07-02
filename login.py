@@ -159,11 +159,52 @@ class NoInternetPopup(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-class Quitar_Reserva(BoxLayout):
+class Content_Reserva(BoxLayout):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-    
+        super(Content_Reserva, self).__init__(**kwargs)
+        self.menu = None  # Variable para almacenar el menú desplegable
+        self.set_iniciales()
 
+
+
+    def set_iniciales(self):
+
+        reserva_del_usuario=db.collection("Reservados").document(NewBackup.GiveUserID())
+        reserva=reserva_del_usuario.get()
+
+        espacio= reserva.to_dict().get("Lugar")
+        campus= reserva.to_dict().get("Campus")
+        auto= reserva.to_dict().get("Auto")
+
+        GuardameElLugar.set(espacio)
+        GuardameElCampus.set(campus)
+        GuardameElAuto.set(auto)
+        
+
+        self.ids.del_campus.text=campus
+        self.ids.del_espacio.text=espacio
+        self.ids.dropdown_field.text=auto
+
+
+    def LimpiarCeldas(self):
+        self.ids.del_campus.text=""
+        self.ids.del_espacio.text=""
+        self.ids.dropdown_field.text=""
+
+
+    def Cancelar_Reserva(self):
+        print("")
+
+        if self.ids.del_campus.text != "" and self.ids.del_espacio.text != "" and self.ids.dropdown_field.text !="":
+            db.collection("Reservados").document(NewBackup.GiveUserID()).delete()
+            db.collection("Estacionamientos").document(self.ids.del_campus.text).collection("Espacios").document(self.ids.del_espacio.text).update({
+                "Estado": "Libre",
+                "OcupadoPor": "Nadie"
+
+            })
+            self.LimpiarCeldas()
+        else:
+            print("error")
 class Content_Modificar(BoxLayout):
     def __init__(self, **kwargs):
         super(Content_Modificar, self).__init__(**kwargs)
@@ -172,6 +213,24 @@ class Content_Modificar(BoxLayout):
     #Necesario para menus desplegables
     
     ################################
+
+    def set_iniciales(self):
+
+        reserva_del_usuario=db.collection("Reservados").document(NewBackup.GiveUserID())
+        reserva=reserva_del_usuario.get()
+
+        espacio= reserva.to_dict().get("Lugar")
+        campus= reserva.to_dict().get("Campus")
+        auto= reserva.to_dict().get("Auto")
+
+        GuardameElLugar.set(espacio)
+        GuardameElCampus.set(campus)
+        GuardameElAuto.set(auto)
+        
+
+        self.ids.id_campus.text=campus
+        self.ids.id_espacio.text=espacio
+        self.ids.dropdown_field.text=auto
 
 
     def LimpiarCeldas(self):
@@ -197,24 +256,6 @@ class Content_Modificar(BoxLayout):
         self.ids.id_espacio.text = text
         if self.menu:
             self.menu.dismiss()     
-
-    def set_iniciales(self):
-
-        reserva_del_usuario=db.collection("Reservados").document(NewBackup.GiveUserID())
-        reserva=reserva_del_usuario.get()
-
-        espacio= reserva.to_dict().get("Lugar")
-        campus= reserva.to_dict().get("Campus")
-        auto= reserva.to_dict().get("Auto")
-
-        GuardameElLugar.set(espacio)
-        GuardameElCampus.set(campus)
-        GuardameElAuto.set(auto)
-        
-
-        self.ids.id_campus.text=campus
-        self.ids.id_espacio.text=espacio
-        self.ids.dropdown_field.text=auto
 
 
 
@@ -885,14 +926,21 @@ class Reservar_Espacio(MDScreen):
 
 
 class Espacio_Reservado(MDScreen):
+
+    def close_dialog(self, *args):
+        self.dialog.dismiss()   
+
+    def LimpiarDialog(self):
+        self.dialog=None
+
     def Cancelar_Reserva(self):
 
         self.LimpiarDialog()
         if not self.dialog:
             self.dialog = MDDialog(
-                title="Cancelar Reserva",
+                title="Confirmar cancelación",
                 type="custom",
-                content_cls=Quitar_Reserva(),
+                content_cls=Content_Reserva(),
                 buttons=[
                     MDFlatButton(
                         text="Cerrar",
@@ -901,115 +949,13 @@ class Espacio_Reservado(MDScreen):
                         on_release=self.close_dialog,
                         
                     ),
-                    MDFlatButton(
-                        text="Ok",
-                        theme_text_color="Custom",
-                        text_color=self.theme_cls.primary_color,
-                        on_release=self.quitar_auto_from_Reserva,
-                    ),
                 ],
             )
         self.dialog.open()       
 
-    def Quitar_Reserva(self):
-        pass
-    def close_dialog(self, *args):
-        self.dialog.dismiss()   
-
-    def LimpiarDialog(self):
-        self.dialog=None
-
-
-    def Quitar_Reserva2(self,Auto):
-
-       # res2 = db.collection("Estacionamientos").document("Meyer").collection("Espacios").document()
-        docs_ref_Meyer = db.collection("Estacionamientos").document("Meyer").collection("Espacios")
-        docs_ref_Chuyaca_AV = db.collection("Estacionamientos").document("Chuyaca - AV").collection("Espacios")
-        docs_ref_Chuyaca_EP = db.collection("Estacionamientos").document("Chuyaca - EP").collection("Espacios")
-        docs_ref_Chuyaca_Salud = db.collection("Estacionamientos").document("Chuyaca - Salud").collection("Espacios")
-        # Recuperar todos los documentos en la colección
-        docs_Meyer = docs_ref_Meyer.stream()
-        docs_Chuyaca_AV = docs_ref_Chuyaca_AV.stream()
-        docs_Chuyaca_EP = docs_ref_Chuyaca_EP.stream()
-        docs_Chuyaca_Salud = docs_ref_Chuyaca_Salud.stream()
-
-
-                # Crear una lista para almacenar los datos
-        data = []
-        
-        query = docs_ref_Meyer.where("OcupadoPor", "==", "BBBB-124")      
-        results_meyer=query.stream()          
-
-                #Lugares - Campus Meyer 
-        for doc in docs_Meyer:
-            estacionamiento_data = doc.to_dict()
-            Estado = estacionamiento_data.get("Estado", "")
-            OcupadoPor = estacionamiento_data.get("OcupadoPor", "")
-            if Estado=="Ocupado" and OcupadoPor==Auto:
-                    doc.reference.update({
-                        "Estado": "Libre",
-                        "OcupadoPor": "Nadie"
-                 })
-
-                #Lugares - Campus Chuyaca EP
-        for doc in docs_Chuyaca_EP:
-            estacionamiento_data = doc.to_dict()
-            Estado = estacionamiento_data.get("Estado", "")
-            OcupadoPor = estacionamiento_data.get("OcupadoPor", "")
-            if Estado=="Ocupado" and OcupadoPor==Auto:
-                doc.reference.Update({
-                    "Estado": "Libre",
-                   "OcupadoPor": "Nadie",
-                })#
-
-            #QUITAR ESTA INCOMPLETO
-
-                #Lugares - Campus Chuyaca AV
-        #for doc in docs_Chuyaca_AV:
-        ##    estacionamiento_data = doc.to_dict()
-        #    Estado = estacionamiento_data.get("Estado", "")
-        #    OcupadoPor = estacionamiento_data.get("OcupadoPor", "")
-        #    if Estado=="Ocupado" and OcupadoPor==Auto:
-        #        db.collection("Estacionamientos").document("Chuyaca - AV").collection("Espacios").where("OcupadoPor", "==", Auto).Update({
-        #            "Estado": "Libre",
-        #            "OcupadoPor": "Nadie",
-        #        })
-                #Lugares - Campus Chuyaca Salud
-        #for doc in docs_Chuyaca_Salud:
-        #    estacionamiento_data = doc.to_dict()
-        #    nombre_documento = doc.id
-        #    Estado = estacionamiento_data.get("Estado", "")
-        #    OcupadoPor = estacionamiento_data.get("OcupadoPor", "")
-        #            #contrasena = user_data.get("Contrasena", "")
-        #    if Estado=="Ocupado" and OcupadoPor==Auto:
-        #        db.collection("Estacionamientos").document("Chuyaca - Salud").collection("Espacios").where("OcupadoPor", "==", Auto).Update({
-        ##            "Estado": "Libre",
-         ###           "OcupadoPor": "Nadie",
-   #             })
-###
-        res = db.collection("Reservados").document(str(NewBackup.GiveUserID())).delete()  # delete document
-        self.dialog.content_cls.ids.reserva_quitar.text=""
-        self.close_dialog()
-        self.LimpiarDialog()        
-        print(res)        
-
-
-    def quitar_auto_from_Reserva(self, *args):
-        if self.dialog.content_cls.ids.reserva_quitar.text != "" :
-            Auto = self.dialog.content_cls.ids.reserva_quitar.text
-            self.Quitar_Reserva2(Auto)
-        else: 
-            print("Campo Vacio")
-      
-            self.Error()    
-
 
     
     def Actualizar_Reserva(self):
-        
-
-
-
 
         self.LimpiarDialog()
         if not self.dialog:
