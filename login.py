@@ -76,6 +76,35 @@ def close_firebase():
         db = None  # Asigna None para indicar que la conexión de Firestore está cerrada
 
 
+
+        
+class BackUp():
+    def __init__(self):
+        self.UserID=""
+    def SaveUserID(self,User):
+        self.UserID=User
+    def GiveUserID(self):
+        return self.UserID
+    
+NewBackup=BackUp()
+
+
+
+class GuardameUnaVariable():
+    def __init__(self):
+        self.BackUp=""
+
+    def set(self,guardar):
+        self.BackUp=guardar
+
+    def give(self):
+        return self.BackUp
+    
+
+GuardameElAuto=GuardameUnaVariable()
+GuardameElCampus=GuardameUnaVariable()
+GuardameElLugar=GuardameUnaVariable()
+
 #cred = credentials.Certificate('serviceAccountKey.json')
 #app = firebase_admin.initialize_app(cred)
 
@@ -134,6 +163,243 @@ class Quitar_Reserva(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
     
+
+class Content_Modificar(BoxLayout):
+    def __init__(self, **kwargs):
+        super(Content_Modificar, self).__init__(**kwargs)
+        self.menu = None  # Variable para almacenar el menú desplegable
+        self.set_iniciales()
+    #Necesario para menus desplegables
+    
+    ################################
+
+
+    def LimpiarCeldas(self):
+        self.ids.id_campus.text=""
+        self.ids.espacio.text=""
+        self.ids.dropdown_field.text=""
+
+
+    def set_option(self, text):
+        self.ids.dropdown_field.text = text
+        if self.menu:
+            self.menu.dismiss()
+
+    def set_option_estacionamiento(self, text):
+        self.ids.id_campus.text = text
+        self.ids.id_espacio.text = ""
+        if self.menu:
+            self.menu.dismiss()      
+
+
+
+    def set_option_not_campus(self, text):
+        self.ids.id_espacio.text = text
+        if self.menu:
+            self.menu.dismiss()     
+
+    def set_iniciales(self):
+
+        reserva_del_usuario=db.collection("Reservados").document(NewBackup.GiveUserID())
+        reserva=reserva_del_usuario.get()
+
+        espacio= reserva.to_dict().get("Lugar")
+        campus= reserva.to_dict().get("Campus")
+        auto= reserva.to_dict().get("Auto")
+
+        GuardameElLugar.set(espacio)
+        GuardameElCampus.set(campus)
+        GuardameElAuto.set(auto)
+        
+
+        self.ids.id_campus.text=campus
+        self.ids.id_espacio.text=espacio
+        self.ids.dropdown_field.text=auto
+
+
+
+
+    def show_dropdown_menu_auto(self):
+        self.menu=""
+        id_user=NewBackup.GiveUserID()
+        autos_items=None
+        #Buscar los autos del usuario
+
+        doc_ref_autos= db.collection("Usuarios").document(id_user).collection("Vehiculos")
+        autos_del_usuario=doc_ref_autos.stream()
+        print("interactuando")
+        data_autos = []
+                
+
+        #Buscar los autos del usuario
+        for doc in autos_del_usuario:
+            nombre_documento = doc.id
+            data_autos.append({"text": nombre_documento, "viewclass": "OneLineListItem", "on_release": lambda x=nombre_documento: self.set_option(x)})
+
+        #Menu desplegable con las patentes de los autos que posee el usuario logeado
+        if not self.menu:
+            self.menu = MDDropdownMenu(
+                caller=self.ids.dropdown_field,
+                items=data_autos,
+                width_mult=0.5,
+            )
+            self.menu.open()
+
+    def show_dropdown_menu_campus(self):
+        self.menu=""
+        id_user=NewBackup.GiveUserID()
+        autos_items=None
+        #Buscar los autos del usuario
+
+        doc_ref_estacionamientos= db.collection("Estacionamientos")
+        estacionamientos=doc_ref_estacionamientos.stream()
+
+        print("interactuando")
+
+        data_estacionamientos = []
+                
+
+        #Buscar los autos del usuario
+        for doc in estacionamientos:
+            nombre_documento = doc.id
+            data_estacionamientos.append({"text": nombre_documento, "viewclass": "OneLineListItem", "on_release": lambda x=nombre_documento: self.set_option_estacionamiento(x)})
+
+       
+
+        #Menu desplegable con las patentes de los autos que posee el usuario logeado
+        if not self.menu:
+            self.menu = MDDropdownMenu(
+                caller=self.ids.id_campus,
+                items=data_estacionamientos,
+                width_mult=0.5,
+            )
+            self.menu.open()
+
+
+
+    def show_dropdown_menu_espacio(self):
+        self.menu=""
+        id_user=NewBackup.GiveUserID()
+        autos_items=None
+        #Buscar los autos del usuario
+
+
+        if self.ids.id_campus.text != "" :
+
+
+            doc_ref_estacionamientos= db.collection("Estacionamientos").document(self.ids.id_campus.text).collection("Espacios")
+            estacionamientos=doc_ref_estacionamientos.stream()
+
+            print("interactuando")
+
+            data_estacionamientos = []
+                    
+
+            #Buscar los autos del usuario
+            for doc in estacionamientos:
+                nombre_documento = doc.id
+                data_estacionamientos.append({"text": nombre_documento, "viewclass": "OneLineListItem", "on_release": lambda x=nombre_documento: self.set_option_not_campus(x)})
+
+        
+
+            #Menu desplegable con las patentes de los autos que posee el usuario logeado
+            if not self.menu:
+                self.menu = MDDropdownMenu(
+                    caller=self.ids.id_espacio,
+                    items=data_estacionamientos,
+                    width_mult=0.5,
+                )
+                self.menu.open()
+
+        else:
+            print("Campus esta vacio")
+
+
+
+
+    def Actualizar_Reserva(self):
+        print("")
+
+
+        nuevo_campus= self.ids.id_campus.text
+        nuevo_Lugar= self.ids.id_espacio.text
+        nuevo_auto= self.ids.dropdown_field.text
+        #test solo cambiar la patente del auto
+
+
+        #Si solo se cambia el auto del lugar
+        if nuevo_campus == GuardameElCampus.give() and nuevo_Lugar == GuardameElLugar.give() and nuevo_auto != GuardameElAuto.give():
+
+
+
+
+            #Actualizacion general en la reserva personal
+            res = db.collection("Reservados").document(NewBackup.GiveUserID()).update({
+                "Auto": nuevo_auto,
+                "Campus": nuevo_campus,
+                "Lugar": nuevo_Lugar
+
+            })
+            self.set_iniciales()
+
+            res2 = db.collection("Estacionamientos").document(nuevo_campus).collection("Espacios").document(nuevo_Lugar).update({
+                "Estado":"Ocupado",
+                "OcupadoPor":nuevo_auto,
+
+
+
+
+            })
+
+    
+        #Si se cambia el lugar
+
+        else:
+            comprobar = db.collection("Estacionamientos").document(nuevo_campus).collection("Espacios").document(nuevo_Lugar).get()
+            Estado_comprobar=comprobar.to_dict().get("Estado")
+
+            #Comprobar si el lugar nuevo esta ocupado
+            if Estado_comprobar != "Ocupado":
+
+                #Actualizacion general en la reserva personal
+                res = db.collection("Reservados").document(NewBackup.GiveUserID()).update({
+                    "Auto": nuevo_auto,
+                    "Campus": nuevo_campus,
+                    "Lugar": nuevo_Lugar
+
+                })
+                
+
+                #Actualiza el espacio que antes se estaba usando para dejarlo libre
+                res2 = db.collection("Estacionamientos").document(GuardameElCampus.give()).collection("Espacios").document(GuardameElLugar.give()).update({
+                    "Estado":"Libre",
+                    "OcupadoPor":"Nadie",
+
+
+                })
+
+
+                #Actualiza el lugar nuevo elegido y lo ocupa
+                res3 = db.collection("Estacionamientos").document(nuevo_campus).collection("Espacios").document(nuevo_Lugar).update({
+                    "Estado":"Ocupado",
+                    "OcupadoPor":nuevo_auto,
+
+
+                })
+
+                self.set_iniciales()
+                print("Lugar reservado cambiado con exito")
+            else:
+                print("El lugar elegido esta ocupado")
+
+        
+        #Si se cambia el campus
+
+
+
+
+
+
 class EliminarUsuarioWidget(BoxLayout):
     def __init__(self, nombre_documento, **kwargs):
         super().__init__(**kwargs)
@@ -191,15 +457,7 @@ class Eliminar_Usuario(MDScreen):
         self.ids.usuario.text = ""
         print(res)
 
-class BackUp():
-    def __init__(self):
-        self.UserID=""
-    def SaveUserID(self,User):
-        self.UserID=User
-    def GiveUserID(self):
-        return self.UserID
-    
-NewBackup=BackUp()
+
 
 
 class Anadir_Usuario(MDScreen):
@@ -248,14 +506,20 @@ class Content_E(BoxLayout):
     #Necesario para menus desplegables
     
     ################################
-    def LimpiarDialog(self):
-        self.dialog=None        
 
 
     def LimpiarCeldas(self):
         self.ids.id_campus.text=""
         self.ids.espacio.text=""
         self.ids.dropdown_field.text=""
+
+
+        
+    def LimpiarDialog(self):
+        self.dialog=None        
+
+
+
 
 
     def close_dialog(self, *args):
@@ -698,7 +962,7 @@ class Espacio_Reservado(MDScreen):
                    "OcupadoPor": "Nadie",
                 })#
 
-
+            #QUITAR ESTA INCOMPLETO
 
                 #Lugares - Campus Chuyaca AV
         #for doc in docs_Chuyaca_AV:
@@ -738,6 +1002,37 @@ class Espacio_Reservado(MDScreen):
             print("Campo Vacio")
       
             self.Error()    
+
+
+    
+    def Actualizar_Reserva(self):
+        
+
+
+
+
+        self.LimpiarDialog()
+        if not self.dialog:
+            self.dialog = MDDialog(
+                title="Modificar reserva:",
+                type="custom",
+                content_cls=Content_Modificar(),
+                buttons=[
+                    MDFlatButton(
+                        text="Cerrar",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.close_dialog,
+                        
+                    ),
+
+                ],
+            )
+        self.dialog.open()
+
+
+
+
 
 #ELIMINADO, REVISAR DESPUES
 class Espacios_Disponibles(MDScreen):
@@ -1322,7 +1617,7 @@ class MainApp(MDApp):
                     if doc_snapshot.exists:
                         datos = doc_snapshot.to_dict()
                         Auto = datos.get("Auto","")
-                        espacio = datos.get("Espacio","")
+                        espacio = datos.get("Lugar","")
                         Campus= datos.get("Campus","")
                         data.append((espacio, Campus,Auto)) 
                         print(data)

@@ -695,6 +695,82 @@ ScreenManagement:
 #show_dropdown_menu_campus
 
 
+
+
+
+<Content_Modificar>
+    id: contenedor_de_modificar
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "250dp"
+
+    MDTextField:
+        id: id_campus
+        hint_text: "Campus"
+        helper_text: "Elija campus"
+        helper_text_mode: "on_focus"
+        mode: "rectangle"
+        icon_right: "arrow-down-drop-circle-outline"
+        size_hint_x: 0.8
+        mode: "rectangle"
+        size_hint_y: None
+        height: 200 
+                                    
+        width: 700
+        font_size: 18
+        pos_hint: {"center_x": 0.5, "top": 0.87}  # Posiciona el campo de texto en la parte superior
+        readonly: True
+        on_focus: root.show_dropdown_menu_campus()    
+
+    MDTextField:
+        id: id_espacio
+        hint_text: "Espacio"
+        helper_text: "Elija espacio"
+        helper_text_mode: "on_focus"
+        mode: "rectangle"
+        icon_right: "arrow-down-drop-circle-outline"
+        size_hint_x: 0.8
+        mode: "rectangle"
+        size_hint_y: None
+        height: 200 
+                                    
+        width: 700
+        font_size: 18
+        pos_hint: {"center_x": 0.5, "top": 0.87}  # Posiciona el campo de texto en la parte superior
+        readonly: True
+        on_focus: root.show_dropdown_menu_espacio()   
+
+    MDTextField:
+        id: dropdown_field
+        hint_text: "Auto"
+        helper_text: "Elija auto"
+        helper_text_mode: "on_focus"
+        mode: "rectangle"
+        icon_right: "arrow-down-drop-circle-outline"
+        size_hint_x: 0.8
+        mode: "rectangle"
+        size_hint_y: None
+        height: 200 
+                                    
+        width: 700
+        font_size: 18
+        pos_hint: {"center_x": 0.5, "top": 0.87}  # Posiciona el campo de texto en la parte superior
+        readonly: True
+        on_focus: root.show_dropdown_menu_auto()  
+
+    MDRoundFlatButton:
+        text: "Actualizar"
+        font_size: 12
+        pos_hint: {"center_x": 0.5}
+        size_hint_y: None          
+
+        height: 200                          
+        width: 200
+        on_press: root.Actualizar_Reserva()
+
+
+
 <Content2>
     orientation: "vertical"
     spacing: "12dp"
@@ -1172,7 +1248,7 @@ ScreenManagement:
                 MDScreen:
 
                     MDTopAppBar:
-                        title: "Reservados"
+                        title: "Reservado"
                         elevation: 4
                         pos_hint: {"top": 1}
                         md_bg_color: app.theme_cls.primary_color
