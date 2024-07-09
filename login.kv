@@ -69,7 +69,7 @@ ScreenManagement:
             width: root.width
 
             MDBoxLayout:
-                size_hint_x: .17
+                size_hint_x: .33
 
             MDBoxLayout:
                 pos_hint: {'y': .40,}
@@ -91,7 +91,7 @@ ScreenManagement:
 
             MDBoxLayout:
                 #size_hint_x: .12
-                size_hint: .15, .8
+                size_hint: .3, .8
 
                 
             MDBoxLayout:
@@ -355,7 +355,7 @@ ScreenManagement:
 
         MDFloatLayout:
        #    pos: 0, -20.5
-            size_hint: 1.2, .88
+            size_hint: 1.2, .899
             md_bg_color: app.theme_cls.primary_color
             height: root.height    
             orientation: 'vertical'        
@@ -504,7 +504,7 @@ ScreenManagement:
             id: container
             pos: -.2, -64.5    
             orientation: 'vertical'
-            size_hint: 1.14, 1
+            size_hint: 1.08, 1
             pos_hint: {'right': 1.05}
 
         MDNavigationLayout:
@@ -779,7 +779,208 @@ ScreenManagement:
 
     MDTextField:
         id: Auto_Borrar
-        hint_text: "ID del Auto"
+        hint_text: "Patente del Auto"
+
+
+#Plantilla
+<Content_campos_vacios_reservar>:
+    orientation: 'vertical'
+    spacing: '10dp'
+    size_hint: None, None
+    height: "40dp"
+    width: "150dp"
+
+    MDLabel:
+        text: "Campos incompletos"
+        font_style: "H6"
+        halign: 'center'
+        valign: 'middle'        
+
+<Reservado_con_exito>:
+    orientation: 'vertical'
+    spacing: '10dp'
+    size_hint: None, None
+    height: "40dp"
+    width: "150dp"
+
+    MDLabel:
+        text: "Reservado con exito"
+        font_style: "H6"
+        halign: 'center'
+        valign: 'middle'        
+
+<Auto_borrado>:
+    orientation: 'vertical'
+    spacing: '10dp'
+    size_hint: None, None
+    height: "40dp"
+    width: "150dp"
+
+    MDLabel:
+        text: "Auto eliminado con exito"
+        font_style: "H6"
+        halign: 'center'
+        valign: 'middle'      
+
+
+<Año_invalido>:
+    orientation: 'vertical'
+    spacing: '10dp'
+    size_hint: None, None
+    height: "140dp"
+    width: "250dp"
+
+    MDLabel:
+        text: "El año ingresado es invalido"
+        font_style: "H6"
+        halign: 'center'
+        valign: 'middle'    
+
+
+<ErrorCampoVacio>
+    orientation: 'vertical'
+    spacing: '10dp'
+    size_hint: None, None
+    height: "40dp"
+    width: "150dp"
+
+    MDLabel:
+        text: "Campo vacio"
+        font_style: "H6"
+        halign: 'center'
+        valign: 'middle'      
+
+<Auto_agregado_exitosamente>
+    orientation: 'vertical'
+    spacing: '10dp'
+    size_hint: None, None
+    height: "40dp"
+    width: "250dp"
+
+    MDLabel:
+        text: "Auto agregado con exito"
+        font_style: "H6"
+        halign: 'center'
+        valign: 'middle'    
+
+<Patente_en_uso>
+    orientation: 'vertical'
+    spacing: '10dp'
+    size_hint: None, None
+    height: "40dp"
+    width: "250dp"
+
+    MDLabel:
+        text: "La patente ya esta en uso"
+        font_style: "H6"
+        halign: 'center'
+        valign: 'middle'  
+
+<Patente_no_encontrada>
+    orientation: 'vertical'
+    spacing: '10dp'
+    size_hint: None, None
+    height: "40dp"
+    width: "250dp"
+
+    MDLabel:
+        text: "La patente no fue encontrada"
+        font_style: "H6"
+        halign: 'center'
+        valign: 'middle'      
+
+<YaHayReserva>:
+    orientation: 'vertical'
+    spacing: '10dp'
+    size_hint: None, None
+    height: "40dp"
+    width: "150dp"
+
+    MDLabel:
+        text: "Ya tienes un espacio reservado"
+        font_style: "H6"
+        halign: 'center'
+        valign: 'middle'        
+
+<Modificado_auto_exito>:
+    orientation: 'vertical'
+    spacing: '10dp'
+    size_hint: None, None
+    height: "60dp"
+    width: "220dp"
+
+    MDLabel:
+        text: "Auto modificado con exito"
+        font_style: "H6"
+        halign: 'center'
+        valign: 'middle' 
+
+
+<No_tienes_una_reserva>:
+    orientation: 'vertical'
+    spacing: '10dp'
+    size_hint: None, None
+    height: "40dp"
+    width: "150dp"
+
+    MDLabel:
+        text: "No tienes una reserva"
+        font_style: "H6"
+        halign: 'center'
+        valign: 'middle'    
+
+<Cancelado_con_Exito>:
+    orientation: 'vertical'
+    spacing: '10dp'
+    size_hint: None, None
+    height: "60dp"
+    width: "150dp"
+
+    MDLabel:
+        text: "Cancelado con exito"
+        font_style: "H6"
+        halign: 'center'
+        valign: 'middle' 
+
+<Patente_no_valida>:
+    orientation: 'vertical'
+    spacing: '10dp'
+    size_hint: None, None
+    height: "60dp"
+    width: "200dp"
+
+    MDLabel:
+        text: "La patente ingresada no es valida"
+        font_style: "H6"
+        halign: 'center'
+        valign: 'middle' 
+
+
+<Actualizado_con_Exito>:
+    orientation: 'vertical'
+    spacing: '10dp'
+    size_hint: None, None
+    height: "60dp"
+    width: "150dp"
+
+    MDLabel:
+        text: "Modificado con exito"
+        font_style: "H6"
+        halign: 'center'
+        valign: 'middle' 
+
+<Lugar_Incorrecto>:
+    orientation: 'vertical'
+    spacing: '10dp'
+    size_hint: None, None
+    height: "60dp"
+    width: "150dp"
+
+    MDLabel:
+        text: "El lugar ya esta en uso"
+        font_style: "H6"
+        halign: 'center'
+        valign: 'middle' 
 
 <Content_Reserva>
 
@@ -876,14 +1077,7 @@ ScreenManagement:
         
                         
 
-<ErrorCampoVacio>
 
-    orientation: "vertical"
-    spacing: "12dp"
-    size_hint_y: None
-    height: "30dp"
-
-        
 
 <Correcto>
 
@@ -1178,10 +1372,11 @@ ScreenManagement:
 
         MDBoxLayout:
             id: container
-            pos: -.2, -64.5    #no tocar
+            pos: 0.2, -64.5    #no tocar
             orientation: 'vertical'
-            size_hint: 1.12, .9
-            pos_hint: {'right': 1.05}
+            size_hint: 1.15, .9
+            pos_hint: {'right': 1.1}
+
 
         MDNavigationLayout:
 
@@ -1294,9 +1489,9 @@ ScreenManagement:
         
         MDBoxLayout:
             id: container
-            pos: -.2, -64.5    
+            pos: 0.2, -64.5   
             orientation: 'vertical'
-            size_hint: 1.14, 1
+            size_hint: 1.07, 1
             pos_hint: {'right': 1.05}
 
         MDNavigationLayout:
@@ -1462,8 +1657,6 @@ ScreenManagement:
                             app.switchWindow('login', True)
                             app.root.current = 'login'
                             root.manager.transition.direction = "up"  
-
-#Test
 
 <DrawerClickableItem@MDNavigationDrawerItem>
     focus_color: "#e7e4c0"

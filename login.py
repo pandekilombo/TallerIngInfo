@@ -7,6 +7,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 from google.cloud.firestore_v1.base_query import FieldFilter
+from kivymd.uix.label import MDLabel
 
 from socket import create_connection, gaierror
 import socket
@@ -24,7 +25,7 @@ from kivymd.uix.button import MDFlatButton
 from kivy.properties import StringProperty, ObjectProperty
 from kivymd.uix.menu import MDDropdownMenu
 
-
+from datetime import datetime
 # Initialize Firebase Admin SDK
 
 db = None
@@ -78,6 +79,10 @@ def close_firebase():
 
 
         
+
+
+
+
 class BackUp():
     def __init__(self):
         self.UserID=""
@@ -93,6 +98,7 @@ NewBackup=BackUp()
 class GuardameUnaVariable():
     def __init__(self):
         self.BackUp=""
+        self.Boolean=False
 
     def set(self,guardar):
         self.BackUp=guardar
@@ -100,28 +106,18 @@ class GuardameUnaVariable():
     def give(self):
         return self.BackUp
     
+    def set_bool(self,set):
+        self.Boolean=set
+
+    def give_bool(self):
+        return self.Boolean
+    
 
 GuardameElAuto=GuardameUnaVariable()
 GuardameElCampus=GuardameUnaVariable()
 GuardameElLugar=GuardameUnaVariable()
+TengoReserva=GuardameUnaVariable()
 
-#cred = credentials.Certificate('serviceAccountKey.json')
-#app = firebase_admin.initialize_app(cred)
-
-
-# Crea un nuevo documento en Firestore
-#db = firestore.client()
-
-#doc_ref = db.collection("Usuarios").document("Miguel_Contreras1")
-#doc_ref2 = db.collection("Usuarios").document("m")
-#doc_ref3 = db.collection("Usuarios").document("m-no-admin")
-
-
-#doc_ref.set({"Nombre": "Miguel","Apellido1": "Contreras","Apellido2": "Fuentealba", "Contrasena": "1234", "Rol": "Admin"})
-#doc_ref2.set({"Nombre": "Miguel","Apellido1": "Contreras","Apellido2": "Fuentealba", "Contrasena": "2", "Rol": "Admin"})
-#doc_ref3.set({"Nombre": "Miguel","Apellido1": "Contreras","Apellido2": "Fuentealba", "Contrasena": "2", "Rol": "User"})
-
-#Productos NO DESCOMENTAR - SE CREAN OBJETOS NUEVOS CON ID DISTINTA SI SE EJECUTAN
 
 
 #Codigo extraido de la app movil, perdon diego
@@ -147,22 +143,89 @@ class InvalidLoginPopup(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+class YaHayReserva(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
 #Dialogo de error campos vacios
+class Content_campos_vacios_reservar(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
 class ValidLoginPopup(BoxLayout):
     # Abre un cuadro de diálogo cuando el usuario ingresa detalles válidos al iniciar sesión
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+class Patente_no_valida(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+class Cancelado_con_Exito(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+class No_tienes_una_reserva(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        
+class Auto_borrado(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+class Modificado_auto_exito(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        
+class Reservado_con_exito(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+class Año_invalido(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.add_widget(MDLabel(text="Debe ser:"))
+        self.add_widget(MDLabel(text="  - Numero"))
+        self.add_widget(MDLabel(text="  - Estar entre 1800 y el año actual"))
+
+
+class Lugar_Incorrecto(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+class Patente_en_uso(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+class Auto_agregado_exitosamente(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+class Patente_no_encontrada(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
 class NoInternetPopup(BoxLayout):
     # Abre un cuadro de diálogo cuando no hay conexión a internet
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+class Actualizado_con_Exito(BoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
 class Content_Reserva(BoxLayout):
     def __init__(self, **kwargs):
         super(Content_Reserva, self).__init__(**kwargs)
         self.menu = None  # Variable para almacenar el menú desplegable
+        
         self.set_iniciales()
 
 
@@ -194,17 +257,62 @@ class Content_Reserva(BoxLayout):
 
     def Cancelar_Reserva(self):
         print("")
+        if TengoReserva.give_bool() != False:
+            if self.ids.del_campus.text != "" and self.ids.del_espacio.text != "" and self.ids.dropdown_field.text !="":
+                db.collection("Reservados").document(NewBackup.GiveUserID()).delete()
+                db.collection("Estacionamientos").document(self.ids.del_campus.text).collection("Espacios").document(self.ids.del_espacio.text).update({
+                    "Estado": "Libre",
+                    "OcupadoPor": "Nadie"
 
-        if self.ids.del_campus.text != "" and self.ids.del_espacio.text != "" and self.ids.dropdown_field.text !="":
-            db.collection("Reservados").document(NewBackup.GiveUserID()).delete()
-            db.collection("Estacionamientos").document(self.ids.del_campus.text).collection("Espacios").document(self.ids.del_espacio.text).update({
-                "Estado": "Libre",
-                "OcupadoPor": "Nadie"
-
-            })
-            self.LimpiarCeldas()
+                })
+                self.LimpiarCeldas()
+                TengoReserva.set_bool(False)
+                self.Cancelado_con_exito()
+            else:
+                print("error")
+        
         else:
-            print("error")
+            self.No_tienes_reserva()
+    def close_dialog(self, *args):
+        self.dialog.dismiss()   
+
+
+    def No_tienes_reserva(self):
+        # Cuadro de diálogo para entradas inválidas
+        self.dialog = MDDialog(
+                type="custom",
+                content_cls= No_tienes_una_reserva(),
+                size_hint=(.6, .25),
+                auto_dismiss=True,
+                buttons=[
+                    MDFlatButton(
+                        text="Aceptar",
+                        theme_text_color="Custom",
+                        on_release=self.close_dialog,
+
+                    ),
+                ],
+            )
+        self.dialog.open()
+
+
+    def Cancelado_con_exito(self):
+        # Cuadro de diálogo para entradas inválidas
+        self.dialog = MDDialog(
+                type="custom",
+                content_cls= Cancelado_con_Exito(),
+                size_hint=(.6, .25),
+                auto_dismiss=True,
+                buttons=[
+                    MDFlatButton(
+                        text="Aceptar",
+                        theme_text_color="Custom",
+                        on_release=self.close_dialog,
+
+                    ),
+                ],
+            )
+        self.dialog.open()
 class Content_Modificar(BoxLayout):
     def __init__(self, **kwargs):
         super(Content_Modificar, self).__init__(**kwargs)
@@ -367,40 +475,12 @@ class Content_Modificar(BoxLayout):
         nuevo_auto= self.ids.dropdown_field.text
         #test solo cambiar la patente del auto
 
-
-        #Si solo se cambia el auto del lugar
-        if nuevo_campus == GuardameElCampus.give() and nuevo_Lugar == GuardameElLugar.give() and nuevo_auto != GuardameElAuto.give():
-
-
-
-
-            #Actualizacion general en la reserva personal
-            res = db.collection("Reservados").document(NewBackup.GiveUserID()).update({
-                "Auto": nuevo_auto,
-                "Campus": nuevo_campus,
-                "Lugar": nuevo_Lugar
-
-            })
-            self.set_iniciales()
-
-            res2 = db.collection("Estacionamientos").document(nuevo_campus).collection("Espacios").document(nuevo_Lugar).update({
-                "Estado":"Ocupado",
-                "OcupadoPor":nuevo_auto,
+        if TengoReserva.give_bool() !=False:
+            #Si solo se cambia el auto del lugar
+            if nuevo_campus == GuardameElCampus.give() and nuevo_Lugar == GuardameElLugar.give() and nuevo_auto != GuardameElAuto.give():
 
 
 
-
-            })
-
-    
-        #Si se cambia el lugar
-
-        else:
-            comprobar = db.collection("Estacionamientos").document(nuevo_campus).collection("Espacios").document(nuevo_Lugar).get()
-            Estado_comprobar=comprobar.to_dict().get("Estado")
-
-            #Comprobar si el lugar nuevo esta ocupado
-            if Estado_comprobar != "Ocupado":
 
                 #Actualizacion general en la reserva personal
                 res = db.collection("Reservados").document(NewBackup.GiveUserID()).update({
@@ -409,36 +489,121 @@ class Content_Modificar(BoxLayout):
                     "Lugar": nuevo_Lugar
 
                 })
-                
+                self.set_iniciales()
 
-                #Actualiza el espacio que antes se estaba usando para dejarlo libre
-                res2 = db.collection("Estacionamientos").document(GuardameElCampus.give()).collection("Espacios").document(GuardameElLugar.give()).update({
-                    "Estado":"Libre",
-                    "OcupadoPor":"Nadie",
-
-
-                })
-
-
-                #Actualiza el lugar nuevo elegido y lo ocupa
-                res3 = db.collection("Estacionamientos").document(nuevo_campus).collection("Espacios").document(nuevo_Lugar).update({
+                res2 = db.collection("Estacionamientos").document(nuevo_campus).collection("Espacios").document(nuevo_Lugar).update({
                     "Estado":"Ocupado",
                     "OcupadoPor":nuevo_auto,
 
 
+                
+
                 })
 
-                self.set_iniciales()
-                print("Lugar reservado cambiado con exito")
+                self.Actualizado_exitosamente()
+            #Si se cambia el lugar
+
             else:
-                print("El lugar elegido esta ocupado")
+                comprobar = db.collection("Estacionamientos").document(nuevo_campus).collection("Espacios").document(nuevo_Lugar).get()
+                Estado_comprobar=comprobar.to_dict().get("Estado")
 
-        
-        #Si se cambia el campus
+                #Comprobar si el lugar nuevo esta ocupado
+                if Estado_comprobar != "Ocupado":
+
+                    #Actualizacion general en la reserva personal
+                    res = db.collection("Reservados").document(NewBackup.GiveUserID()).update({
+                        "Auto": nuevo_auto,
+                        "Campus": nuevo_campus,
+                        "Lugar": nuevo_Lugar
+
+                    })
+                    
+
+                    #Actualiza el espacio que antes se estaba usando para dejarlo libre
+                    res2 = db.collection("Estacionamientos").document(GuardameElCampus.give()).collection("Espacios").document(GuardameElLugar.give()).update({
+                        "Estado":"Libre",
+                        "OcupadoPor":"Nadie",
 
 
+                    })
 
 
+                    #Actualiza el lugar nuevo elegido y lo ocupa
+                    res3 = db.collection("Estacionamientos").document(nuevo_campus).collection("Espacios").document(nuevo_Lugar).update({
+                        "Estado":"Ocupado",
+                        "OcupadoPor":nuevo_auto,
+
+
+                    })
+
+                    self.set_iniciales()
+                    self.Actualizado_exitosamente()
+                    #print("Lugar reservado cambiado con exito")
+                else:
+                    self.Lugar_en_uso()
+                    #print("El lugar elegido esta ocupado")
+
+            
+            #Si se cambia el campus
+        else:
+            self.No_tienes_reserva()
+
+    def Lugar_en_uso(self):
+        # Cuadro de diálogo para entradas inválidas
+        self.dialog = MDDialog(
+                type="custom",
+                content_cls= Lugar_Incorrecto(),
+                size_hint=(.6, .25),
+                auto_dismiss=True,
+                buttons=[
+                    MDFlatButton(
+                        text="Aceptar",
+                        theme_text_color="Custom",
+                        on_release=self.close_dialog,
+
+                    ),
+                ],
+            )
+        self.dialog.open()
+    def No_tienes_reserva(self):
+        # Cuadro de diálogo para entradas inválidas
+        self.dialog = MDDialog(
+                type="custom",
+                content_cls= No_tienes_una_reserva(),
+                size_hint=(.6, .25),
+                auto_dismiss=True,
+                buttons=[
+                    MDFlatButton(
+                        text="Aceptar",
+                        theme_text_color="Custom",
+                        on_release=self.close_dialog,
+
+                    ),
+                ],
+            )
+        self.dialog.open()
+
+
+    def Actualizado_exitosamente(self):
+        # Cuadro de diálogo para entradas inválidas
+        self.dialog = MDDialog(
+                type="custom",
+                content_cls= Actualizado_con_Exito(),
+                size_hint=(.6, .25),
+                auto_dismiss=True,
+                buttons=[
+                    MDFlatButton(
+                        text="Aceptar",
+                        theme_text_color="Custom",
+                        on_release=self.close_dialog,
+
+                    ),
+                ],
+            )
+        self.dialog.open()
+
+    def close_dialog(self, *args):
+        self.dialog.dismiss() 
 
 
 class EliminarUsuarioWidget(BoxLayout):
@@ -560,9 +725,6 @@ class Content_E(BoxLayout):
         self.dialog=None        
 
 
-
-
-
     def close_dialog(self, *args):
         self.dialog.dismiss()   
 
@@ -592,7 +754,7 @@ class Content_E(BoxLayout):
         #Buscar los autos del usuario
 
 
-        if self.ids.id_campus.text != "" :
+        if self.ids.id_campus.text != "":
 
 
             doc_ref_estacionamientos= db.collection("Estacionamientos").document(self.ids.id_campus.text).collection("Espacios")
@@ -626,46 +788,70 @@ class Content_E(BoxLayout):
         #hay que modificar el estado del espacio en la base de datos del campus y despues agregar la reserva a la id del susuario
         print("")
 
-        doc_ref_reservar = db.collection("Estacionamientos").document(self.ids.id_campus.text).collection("Espacios").document(self.ids.espacio.text)
-        doc_ref_crear_reserva=db.collection("Reservados").document(NewBackup.GiveUserID())
+        
+        if self.ids.id_campus.text != "" and self.ids.espacio.text !="" and self.ids.dropdown_field.text !="":
+            
+            doc_ref_reservar = db.collection("Estacionamientos").document(self.ids.id_campus.text).collection("Espacios").document(self.ids.espacio.text)
+            doc_ref_crear_reserva=db.collection("Reservados").document(NewBackup.GiveUserID())
 
-        reservar_get= doc_ref_reservar.get()
-        crear_reserva_get= doc_ref_crear_reserva.get()
+            reservar_get= doc_ref_reservar.get()
+            crear_reserva_get= doc_ref_crear_reserva.get()
+        
         
         #Si se valida que el documento del espacio existe entonces pasa a verificar si existe una reserva ya
-        if reservar_get.exists:
+            if reservar_get.exists:
 
 
-            #Comprobar si el espacio esta ocupado
-            estado_espacio= reservar_get.to_dict().get("Estado")
-            ocupado_por=reservar_get.to_dict().get("OcupadoPor")
-            if estado_espacio == "Libre":
-    
-                #Comprobar si ya hay una reserva en este usuario:
-                if not crear_reserva_get.exists:
-                    
-                    doc_ref_reservar.update({
-                        "Estado": "Ocupado",
-                        "OcupadoPor": self.ids.dropdown_field.text
+                #Comprobar si el espacio esta ocupado
+                estado_espacio= reservar_get.to_dict().get("Estado")
+                ocupado_por=reservar_get.to_dict().get("OcupadoPor")
+                if estado_espacio == "Libre":
+        
+                    #Comprobar si ya hay una reserva en este usuario:
+                    if not crear_reserva_get.exists:
+                        
+                        doc_ref_reservar.update({
+                            "Estado": "Ocupado",
+                            "OcupadoPor": self.ids.dropdown_field.text
 
-                    })
+                        })
 
-                    doc_ref_crear_reserva.set({
-                        "Auto": self.ids.dropdown_field.text,
-                        "Campus": self.ids.id_campus.text,
-                        "Lugar": self.ids.espacio.text
+                        doc_ref_crear_reserva.set({
+                            "Auto": self.ids.dropdown_field.text,
+                            "Campus": self.ids.id_campus.text,
+                            "Lugar": self.ids.espacio.text
 
 
-                    })
-
-                    self.LimpiarCeldas()
+                        })
+                        self.Reservado_exitoso()
+                        self.LimpiarCeldas()
+                    else:
+                        self.Ya_tienes_reserva()
+                        #print("El usuario "+NewBackup.GiveUserID()+" ya tiene una reserva")
                 else:
-                    print("El usuario "+NewBackup.GiveUserID()+" ya tiene una reserva")
+                    print("El espacio "+self.ids.espacio.text+" en el sector "+self.ids.id_campus.text+" esta ocupado por "+ocupado_por)
             else:
-                print("El espacio "+self.ids.espacio.text+" en el sector "+self.ids.id_campus.text+" esta ocupado por "+ocupado_por)
+                print("Error: el documento "+self.ids.espacio.text+" no existe")
         else:
-            print("Error: el documento "+self.ids.espacio.text+" no existe")
+            self.Campos_Vacios()
 
+    def Ya_tienes_reserva(self):
+        # Cuadro de diálogo para entradas inválidas
+        self.dialog = MDDialog(
+                type="custom",
+                content_cls= YaHayReserva(),
+                size_hint=(.6, .25),
+                auto_dismiss=True,
+                buttons=[
+                    MDFlatButton(
+                        text="Aceptar",
+                        theme_text_color="Custom",
+                        on_release=self.close_dialog,
+
+                    ),
+                ],
+            )
+        self.dialog.open()
 
     def show_dropdown_menu_campus(self):
         self.menu=""
@@ -726,6 +912,44 @@ class Content_E(BoxLayout):
             )
             self.menu.open()
 
+
+
+    def Campos_Vacios(self):
+        # Cuadro de diálogo para entradas inválidas
+        self.dialog = MDDialog(
+                type="custom",
+                content_cls= Content_campos_vacios_reservar(),
+                size_hint=(.6, .25),
+                auto_dismiss=True,
+                buttons=[
+                    MDFlatButton(
+                        text="Aceptar",
+                        theme_text_color="Custom",
+                        on_release=self.close_dialog,
+
+                    ),
+                ],
+            )
+        self.dialog.open()
+
+
+    def Reservado_exitoso(self):
+        # Cuadro de diálogo para entradas inválidas
+        self.dialog = MDDialog(
+                type="custom",
+                content_cls= Reservado_con_exito(),
+                size_hint=(.6, .25),
+                auto_dismiss=True,
+                buttons=[
+                    MDFlatButton(
+                        text="Aceptar",
+                        theme_text_color="Custom",
+                        on_release=self.close_dialog,
+
+                    ),
+                ],
+            )
+        self.dialog.open()
 
 
 
@@ -904,62 +1128,113 @@ class Reservar_Espacio(MDScreen):
         ))
 
     def Reservar_Estacionamiento(self):
-        self.LimpiarDialog()
-        if not self.dialog:
-            self.dialog = MDDialog(
-                title="Reservar Estacionamiento:",
+
+        docs_ref_Reservas = db.collection("Reservados").document(NewBackup.GiveUserID())
+        referencia=docs_ref_Reservas.get()
+
+        if not referencia.exists:
+
+        
+            self.LimpiarDialog()
+            if not self.dialog:
+                self.dialog = MDDialog(
+                    title="Reservar Estacionamiento:",
+                    type="custom",
+                    content_cls=Content_E(),
+                    buttons=[
+                        MDFlatButton(
+                            text="Cerrar",
+                            theme_text_color="Custom",
+                            text_color=self.theme_cls.primary_color,
+                            on_release=self.close_dialog,
+                            
+                        ),
+
+                    ],
+                )
+            self.dialog.open()
+
+        else:
+            self.Ya_tienes_reserva()
+            #print("Ya tienes una reserva")
+
+    def Ya_tienes_reserva(self):
+        # Cuadro de diálogo para entradas inválidas
+        self.dialog = MDDialog(
                 type="custom",
-                content_cls=Content_E(),
+                content_cls= YaHayReserva(),
+                size_hint=(.6, .25),
+                auto_dismiss=True,
                 buttons=[
                     MDFlatButton(
-                        text="Cerrar",
+                        text="Aceptar",
                         theme_text_color="Custom",
-                        text_color=self.theme_cls.primary_color,
                         on_release=self.close_dialog,
-                        
-                    ),
 
+                    ),
                 ],
             )
         self.dialog.open()
- 
 
 
 class Espacio_Reservado(MDScreen):
 
-    def close_dialog(self, *args):
-        self.dialog.dismiss()   
+
 
     def LimpiarDialog(self):
         self.dialog=None
 
-    def Cancelar_Reserva(self):
-
-        self.LimpiarDialog()
-        if not self.dialog:
-            self.dialog = MDDialog(
-                title="Confirmar cancelación",
+    def close_dialog(self, *args):
+        self.dialog.dismiss()   
+    
+    def No_tienes_reserva(self):
+        # Cuadro de diálogo para entradas inválidas
+        self.dialog = MDDialog(
                 type="custom",
-                content_cls=Content_Reserva(),
+                content_cls= No_tienes_una_reserva(),
+                size_hint=(.6, .25),
+                auto_dismiss=True,
                 buttons=[
                     MDFlatButton(
-                        text="Cerrar",
+                        text="Aceptar",
                         theme_text_color="Custom",
-                        text_color=self.theme_cls.primary_color,
                         on_release=self.close_dialog,
-                        
+
                     ),
                 ],
             )
-        self.dialog.open()       
+        self.dialog.open()
 
 
+    def Cancelar_Reserva(self):
+        if TengoReserva.give_bool() != False:
+            self.LimpiarDialog()
+            if not self.dialog:
+                self.dialog = MDDialog(
+                    title="Confirmar cancelación",
+                    type="custom",
+                    content_cls=Content_Reserva(),
+                    buttons=[
+                        MDFlatButton(
+                            text="Cerrar",
+                            theme_text_color="Custom",
+                            text_color=self.theme_cls.primary_color,
+                            on_release=self.close_dialog,
+                                
+                        ),
+                    ],
+                )
+            self.dialog.open()      
+        else:
+            self.No_tienes_reserva() 
+ 
     
     def Actualizar_Reserva(self):
 
-        self.LimpiarDialog()
-        if not self.dialog:
-            self.dialog = MDDialog(
+        if TengoReserva.give_bool() != False:
+            self.LimpiarDialog()
+            if not self.dialog:
+                self.dialog = MDDialog(
                 title="Modificar reserva:",
                 type="custom",
                 content_cls=Content_Modificar(),
@@ -969,15 +1244,14 @@ class Espacio_Reservado(MDScreen):
                         theme_text_color="Custom",
                         text_color=self.theme_cls.primary_color,
                         on_release=self.close_dialog,
-                        
+                            
                     ),
 
                 ],
             )
-        self.dialog.open()
-
-
-
+            self.dialog.open()
+        else:
+            self.No_tienes_reserva() 
 
 
 #ELIMINADO, REVISAR DESPUES
@@ -1022,10 +1296,10 @@ class Vehiculos(MDScreen):
         self.dialog.dismiss()    
     def Insertar_Auto(self,marca,modelo,anio,patente):
         if self.dialog.content_cls.ids.marca.text != "" and self.dialog.content_cls.ids.modelo.text !="" and self.dialog.content_cls.ids.anio.text != "" and self.dialog.content_cls.ids.patente.text !="":
-            res = db.collection("Usuarios").document(NewBackup.GiveUserID()).collection("Vehiculos").document(patente).set({  # insert document
-                'Marca': marca,
-                'Modelo': modelo,
-                'anio': anio,
+            res = db.collection("Usuarios").document(NewBackup.GiveUserID()).collection("Vehiculos").document(patente.upper()).set({  # insert document
+                'Marca': str(marca),
+                'Modelo': str(modelo),
+                'anio': str(anio),
 
                                     
             
@@ -1036,6 +1310,10 @@ class Vehiculos(MDScreen):
             self.dialog.content_cls.ids.patente.text=""
   
             print(res)
+
+
+            self.close_dialog()
+            self.Auto_agregado()
         else:
             self.Error()
             print("campos vacios")
@@ -1096,19 +1374,36 @@ class Vehiculos(MDScreen):
         self.dialog.open()       
 
 
+    def Patente_invalida(self):
+        # Cuadro de diálogo para entradas inválidas
+        self.dialog = MDDialog(
+                type="custom",
+                content_cls= Patente_no_valida(),
+                size_hint=(.68, .25),
+                auto_dismiss=True,
+                buttons=[
+                    MDFlatButton(
+                        text="Aceptar",
+                        theme_text_color="Custom",
+                        on_release=self.close_dialog,
 
+                    ),
+                ],
+            )
+        self.dialog.open()
 
     def Error(self):
-        self.close_dialog()
+
         self.LimpiarDialog()
         if not self.dialog:
             self.dialog = MDDialog(
-                title="Campo Incorrecto",
+
                 type="custom",
+                size_hint=(.6, .25),
                 content_cls=ErrorCampoVacio(),
                 buttons=[
                     MDFlatButton(
-                        text="Cerrar",
+                        text="Aceptar",
                         theme_text_color="Custom",
                         text_color=self.theme_cls.primary_color,
                         on_release=self.close_dialog,
@@ -1118,18 +1413,18 @@ class Vehiculos(MDScreen):
             )
         self.dialog.open()   
 
-    def Success(self):
-        # Correcto
-        self.close_dialog()
+    def Error2(self):
+
         self.LimpiarDialog()
         if not self.dialog:
             self.dialog = MDDialog(
-                title="Accion Existosa",
+
                 type="custom",
-                content_cls=Correcto(),
+                size_hint=(.6, .25),
+                content_cls=Content_campos_vacios_reservar(),
                 buttons=[
                     MDFlatButton(
-                        text="Cerrar",
+                        text="Aceptar",
                         theme_text_color="Custom",
                         text_color=self.theme_cls.primary_color,
                         on_release=self.close_dialog,
@@ -1139,22 +1434,39 @@ class Vehiculos(MDScreen):
             )
         self.dialog.open()   
 
-    def Quitar_Auto2(self,Auto):
-        res = db.collection("Usuarios").document(str(NewBackup.GiveUserID())).collection("Vehiculos").document(Auto).delete()  # delete document
-        self.dialog.content_cls.ids.Auto_Borrar.text=""
-        self.close_dialog()
-        self.LimpiarDialog()        
-        print(res)        
 
 
     def quitar_auto_from_content(self, *args):
-        if self.dialog.content_cls.ids.Auto_Borrar.text != "" :
-            Auto = self.dialog.content_cls.ids.Auto_Borrar.text
-            self.Quitar_Auto2(Auto)
-        else: 
+        if self.dialog.content_cls.ids.Auto_Borrar.text == "":
+
             print("Campo Vacio")
-      
-            self.Error()        
+            self.close_dialog()
+            self.Error()
+
+
+        else: 
+            if len(self.dialog.content_cls.ids.Auto_Borrar.text)==7:
+                Auto=self.dialog.content_cls.ids.Auto_Borrar.text
+
+                patente=db.collection("Usuarios").document(str(NewBackup.GiveUserID())).collection("Vehiculos").document(Auto)
+                get=patente.get()
+                if get.exists:
+                    res = db.collection("Usuarios").document(str(NewBackup.GiveUserID())).collection("Vehiculos").document(Auto).delete()  # delete document
+                    self.dialog.content_cls.ids.Auto_Borrar.text=""
+                    self.close_dialog()   
+                    self.Auto_eliminado()
+                    print(res)    
+                else:
+                    self.close_dialog()
+                    self.Patente_sin_encontrada()
+                    #print("La patente no fue encontrada")
+            else:
+                self.close_dialog()
+                self.Patente_invalida()
+                #print("La patente ingresada no es valida")
+
+        
+
     def Actualizar_Auto(self):
         self.LimpiarDialog()
         if not self.dialog:
@@ -1183,25 +1495,49 @@ class Vehiculos(MDScreen):
 
 
     def Actualizar_Auto2(self,marca,modelo,anio,patente):
+        patente=patente.upper()
         if self.dialog.content_cls.ids.marca.text != "" and self.dialog.content_cls.ids.modelo.text !="" and self.dialog.content_cls.ids.anio.text != "" and self.dialog.content_cls.ids.patente.text !="":
-            res = db.collection("Usuarios").document(NewBackup.GiveUserID()).collection("Vehiculos").document(patente).update({  # insert document
-                'Marca': marca,
-                'Modelo': modelo,
-                'anio': anio,
-                
+            now=datetime.now()
+            if self.check_integer(anio):
 
+                if 1800< int(anio) < now.year:
 
-            
-            })        
-            self.dialog.content_cls.ids.marca.text=""
-            self.dialog.content_cls.ids.modelo.text=""
-            self.dialog.content_cls.ids.anio.text=""
-            self.dialog.content_cls.ids.patente.text=""
-            
-            print(res)
+                    if len(patente)==7:
+                        patente_z=db.collection("Usuarios").document(NewBackup.GiveUserID()).collection("Vehiculos").document(patente)
+                        patente_x=patente_z.get()
+
+                        if patente_x.exists:
+                            res = db.collection("Usuarios").document(NewBackup.GiveUserID()).collection("Vehiculos").document(patente).update({  # insert document
+                                'Marca': marca,
+                                'Modelo': modelo,
+                                'anio': anio,
+                                
+
+                            
+                            })        
+                            self.dialog.content_cls.ids.marca.text=""
+                            self.dialog.content_cls.ids.modelo.text=""
+                            self.dialog.content_cls.ids.anio.text=""
+                            self.dialog.content_cls.ids.patente.text=""
+                            self.close_dialog()
+                            self.Auto_modificado_con_exito()
+                            print(res)
+                        else:
+                            self.close_dialog()
+                            self.Patente_sin_encontrada()
+                    else:
+                        self.close_dialog()
+                        self.Patente_invalida()
+                else:
+                    self.close_dialog()
+                    self.anio_invalido()
+            else:
+                self.close_dialog()
+                self.anio_invalido()
         else:
-            self.Error()            
-            print("campos vacios o no encontrado")        
+            self.close_dialog()
+            self.Error2()           
+            #print("campos vacios o no encontrado")        
 
 
     def Actualizar_auto_from_content(self, *args):
@@ -1211,16 +1547,208 @@ class Vehiculos(MDScreen):
         anio = self.dialog.content_cls.ids.anio.text
         patente = self.dialog.content_cls.ids.patente.text
 
+
+
         self.Actualizar_Auto2(marca, modelo, anio, patente)
 
     def insertar_auto_from_content(self, *args):
+        now = datetime.now()
+
         marca = self.dialog.content_cls.ids.marca.text
         modelo = self.dialog.content_cls.ids.modelo.text
         anio = self.dialog.content_cls.ids.anio.text
         patente = self.dialog.content_cls.ids.patente.text
+        if marca != "" and modelo != "" and anio != "" and patente !="":
+            if self.check_integer(anio):
 
-        self.Insertar_Auto(marca, modelo, anio, patente)
+                if 1800< int(anio) < now.year:
 
+                    if len(patente)==7:
+                        patente_z=db.collection("Usuarios").document(NewBackup.GiveUserID()).collection("Vehiculos").document(patente)
+                        patente_x=patente_z.get()
+
+                        if not patente_x.exists:
+
+                            self.Insertar_Auto(marca, modelo, anio, str(patente))
+                        else:
+                            self.close_dialog()
+                            self.Patente_en_uso()
+                            print("La patente ya esta en uso")
+                    else:
+                        self.close_dialog()
+                        self.Patente_invalida()
+                else:
+                    self.close_dialog()
+                    self.anio_invalido()
+
+
+
+            else:
+                self.close_dialog()
+                self.anio_invalido()
+
+        else:
+            self.close_dialog()
+            self.campos_incompletos()
+
+    def check_integer(self,texto):
+        try:
+            num_stock_value = int(texto)
+            #print("El valor ingresado es un entero:", num_stock_value)
+            return True
+        except ValueError:
+            #print("Error: ID o Número de stock invalido.")
+            return False
+    def anio_invalido(self):
+
+        self.LimpiarDialog()
+        if not self.dialog:
+            self.dialog = MDDialog(
+
+                type="custom",
+                size_hint=(.83, .30),
+                content_cls=Año_invalido(),
+                buttons=[
+                    MDFlatButton(
+                        text="Aceptar",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.close_dialog,
+                        
+                    ),
+                ],
+            )
+        self.dialog.open() 
+
+#Año_invalido
+
+    def Patente_sin_encontrada(self):
+
+        self.LimpiarDialog()
+        if not self.dialog:
+            self.dialog = MDDialog(
+                type="custom",
+                size_hint=(.75, .25),
+                content_cls=Patente_no_encontrada(),
+                buttons=[
+                    MDFlatButton(
+                        text="Aceptar",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.close_dialog,
+                        
+                    ),
+                ],
+            )
+        self.dialog.open()  
+    def Auto_agregado(self):
+
+        self.LimpiarDialog()
+        if not self.dialog:
+            self.dialog = MDDialog(
+                type="custom",
+                size_hint=(.80, .25),
+                content_cls=Auto_agregado_exitosamente(),
+                buttons=[
+                    MDFlatButton(
+                        text="Aceptar",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.close_dialog,
+                        
+                    ),
+                ],
+            )
+        self.dialog.open()  
+
+#Patente_en_uso
+
+    def Patente_en_uso(self):
+
+        self.LimpiarDialog()
+        if not self.dialog:
+            self.dialog = MDDialog(
+
+                type="custom",
+                size_hint=(.81, .25),
+                content_cls=Patente_en_uso(),
+                buttons=[
+                    MDFlatButton(
+                        text="Aceptar",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.close_dialog,
+                        
+                    ),
+                ],
+            )
+        self.dialog.open()
+
+
+
+    def campos_incompletos(self):
+
+        self.LimpiarDialog()
+        if not self.dialog:
+            self.dialog = MDDialog(
+
+                type="custom",
+                size_hint=(.6, .25),
+                content_cls=Content_campos_vacios_reservar(),
+                buttons=[
+                    MDFlatButton(
+                        text="Aceptar",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.close_dialog,
+                        
+                    ),
+                ],
+            )
+        self.dialog.open()
+
+    def Auto_eliminado(self):
+
+        self.LimpiarDialog()
+        if not self.dialog:
+            self.dialog = MDDialog(
+
+                type="custom",
+                size_hint=(.6, .25),
+                content_cls=Auto_borrado(),
+                buttons=[
+                    MDFlatButton(
+                        text="Aceptar",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.close_dialog,
+                        
+                    ),
+                ],
+            )
+        self.dialog.open()
+
+
+    def Auto_modificado_con_exito(self):
+
+        self.LimpiarDialog()
+        if not self.dialog:
+            self.dialog = MDDialog(
+
+                type="custom",
+                size_hint=(.75, .25),
+                content_cls=Modificado_auto_exito(),
+                buttons=[
+                    MDFlatButton(
+                        text="Aceptar",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.close_dialog,
+                        
+                    ),
+                ],
+            )
+        self.dialog.open()
 class Content(BoxLayout):
     pass
 
@@ -1384,7 +1912,7 @@ class MainApp(MDApp):
     
     #Base de la app
     def build(self):
-        Window.size = (260, 500)
+        Window.size = (340, 600)
         #Configuracion visual inicial
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "BlueGray"
@@ -1488,8 +2016,8 @@ class MainApp(MDApp):
                         column_data=[
                             ("Campus", dp(20)),
                             ("Lugar", dp(10)),
-                            ("Estado", dp(12)),                    
-                            ("OcupadoPor", dp(13)),
+                            ("Estado", dp(15)),                    
+                            ("OcupadoPor", dp(20)),
 
                         
                         ],  # Definir las columnas
@@ -1585,7 +2113,7 @@ class MainApp(MDApp):
                 if len(data)>=1:
                     self.root.get_screen('esp_reservado').ids.container.clear_widgets()
                     self.root.get_screen('esp_reservado').ids.container.add_widget(MDDataTable(
-                        pos_hint={'center_x': 0.5, 'center_y': 0.7},
+                        pos_hint={'center_x': 0.5, 'center_y': 0.5},
                         size_hint=(1, 1),
                         check=False,
                         use_pagination=True,
@@ -1600,9 +2128,14 @@ class MainApp(MDApp):
                         ],  # Definir las columnas
                         row_data=data  # Pasar los datos recuperados directamente
                         
-                    ))                
+                    )) 
+                    TengoReserva.set_bool(True)               
                 else:
                     self.root.get_screen('esp_reservado').ids.container.clear_widgets()
+                    
+                    #No tengo un auto reservado
+                    TengoReserva.set_bool(False)
+
                     print("No hay autos registrados")
                 
 
@@ -1655,9 +2188,9 @@ class MainApp(MDApp):
                         rows_num=len(data),
                         column_data=[
                 
-                            ("Marca", dp(20)),
-                            ("Modelo", dp(20)),
-                            ("Año", dp(20)),
+                            ("Marca", dp(17)),
+                            ("Modelo", dp(17)),
+                            ("Año", dp(14)),
                             ("Patente", dp(15))
                         
                         ],  # Definir las columnas
